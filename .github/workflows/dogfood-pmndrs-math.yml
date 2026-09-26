@@ -1,0 +1,81 @@
+name: DOGFOOD-001 pmndrs math
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/dogfood-pmndrs-math-v0
+    paths:
+      - ".github/workflows/dogfood-pmndrs-math.yml"
+      - "dogfood/pmndrs-math/**"
+      - "research/COUNCIL-006_PMNDRS_MATH_DOGFOOD.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dogfood-pmndrs-math-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  taste:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    defaults:
+      run:
+        working-directory: dogfood/pmndrs-math
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Registry metadata
+        run: |
+          npm view math@0.1.0 version dist.integrity dist.unpackedSize --json > out-npm-metadata.json
+          cat out-npm-metadata.json
+
+      - name: Install isolated package
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Probe
+        run: node probe.mjs
+
+      - name: Package inventory
+        run: |
+          npm ls --depth=2 --json > out/npm-tree.json
+          du -sh node_modules/math
+          find node_modules/math -type f | wc -l
+
+      - name: Summary
+        run: |
+          node - <<'NODE' >> "$GITHUB_STEP_SUMMARY"
+          const fs = require('fs');
+          const r = JSON.parse(fs.readFileSync('out/report.json', 'utf8'));
+          console.log('# DOGFOOD-001 — pmndrs/math');
+          console.log('');
+          console.log('- Import/API smoke: PASS');
+          console.log('- Alias-safe in-place math: PASS');
+          console.log('- Seeded RNG replay: PASS');
+          console.log('- Geometry smoke: PASS');
+          console.log('- Shipped Agent Skill: PASS');
+          console.log(`- Installed package: ${r.footprint.files} files / ${r.footprint.bytes} bytes`);
+          console.log('');
+          console.log('Timing is descriptive only.');
+          for (const x of r.benchmark.results) {
+            console.log(`- ${x.label}: median ${x.median_ms.toFixed(3)} ms`);
+          }
+          NODE
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DOGFOOD-001-pmndrs-math-${{ github.run_id }}
+          path: |
+            dogfood/pmndrs-math/out/
+            dogfood/pmndrs-math/out-npm-metadata.json
+            dogfood/pmndrs-math/package-lock.json
+          if-no-files-found: error
+          retention-days: 90

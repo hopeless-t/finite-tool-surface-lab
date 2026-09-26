@@ -1,0 +1,65 @@
+name: BENCH-004 Tool-Need Admission
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/bench-004.yml"
+      - "src/finite_tool_surface_lab/admission_synthetic.py"
+      - "src/finite_tool_surface_lab/bench004.py"
+      - "src/finite_tool_surface_lab/adaptive.py"
+      - "src/finite_tool_surface_lab/retrieval.py"
+      - "specs/BENCH-004.json"
+      - "research/COUNCIL-022_BENCH004_IMPLEMENTATION.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bench-004-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Run full benchmark
+        run: |
+          python -m finite_tool_surface_lab.bench004 \
+            --spec specs/BENCH-004.json \
+            --out evidence/BENCH-004/run
+
+      - name: Summary
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          s=json.load(open("evidence/BENCH-004/run/summary.json"))
+          print("# BENCH-004")
+          print()
+          print(f"State: **{s['state']}**")
+          print(f"Observations: **{s['observation_count']:,}**")
+          print(f"Aggregate rows: **{s['aggregate_rows']:,}**")
+          print(f"Macro rows: **{s['macro_rows']:,}**")
+          print(f"Frontier cells: **{s['frontier_cells']:,}**")
+          print(f"Feasible frontier cells: **{s['feasible_frontier_cells']:,}**")
+          print()
+          print(s["claim_ceiling"])
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BENCH-004-${{ github.run_id }}
+          path: evidence/BENCH-004/run/
+          if-no-files-found: error
+          retention-days: 90

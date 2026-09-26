@@ -1,0 +1,41 @@
+{
+  "schema_version": "ftsl-bench003-selected-findings-v0.1",
+  "study_id": "BENCH-003",
+  "coverage_saturation": {
+    "policy_ids_below_exact_tool_required_coverage": [
+      "FIXED_K:0",
+      "FIXED_K:1"
+    ],
+    "interpretation": "All other non-oracle operating points retained exact all-required capability coverage across every frozen tool-required aggregate condition."
+  },
+  "no_tool_admission": {
+    "adaptive_mean_nonempty_surface_rate": 0.6,
+    "workload_mixtures": 60000,
+    "feasible_with_coverage_ge_0_99_and_false_surface_le_0_05": 0,
+    "feasible_with_coverage_ge_0_99_and_false_surface_le_0_10": 1,
+    "interpretation": "Depth selection alone does not robustly answer whether any Tool surface should exist."
+  },
+  "risky_relevant": {
+    "policy_id": "RELATIVE_TOP:0.9",
+    "risky_wrong_exposure_rate_at_nonzero_density": 1,
+    "mean_selected_k_by_density": {
+      "1": 3,
+      "3": 6,
+      "7": 12,
+      "15": 24
+    },
+    "contrasting_policy": "LARGEST_SCORE_DROP",
+    "contrasting_risky_wrong_exposure_rate_at_nonzero_density": 0,
+    "caveat": "This contrast is specific to the frozen RISKY_RELEVANT family and is not a universal safety claim."
+  },
+  "valid_equivalent": {
+    "policies": [
+      "RELATIVE_TOP:0.9",
+      "LARGEST_SCORE_DROP"
+    ],
+    "density_15_mean_selected_k": 24,
+    "all_required_rate": 1,
+    "interpretation": "Valid equivalence preserves correctness but can inflate visible Tool IDs through tie-preserving selection."
+  },
+  "next_research_candidate": "BENCH-004 Tool-Need Admission Gate"
+}

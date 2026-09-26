@@ -1,0 +1,13 @@
+{
+  "aggregate_rows": 10080,
+  "comparison": "BYTE_IDENTICAL_STABLE_OUTPUTS",
+  "frontier_points": 2184,
+  "observation_count": 483840,
+  "observation_sha256": "019d4ec58cce84fd2e3c0b92e47fa0ec04bf312aa6bb8e1e421b812bf83db22c",
+  "python_versions": [
+    "3.12",
+    "3.13"
+  ],
+  "state": "PASS",
+  "study_id": "BENCH-003-REFERENCE-REPLAY"
+}

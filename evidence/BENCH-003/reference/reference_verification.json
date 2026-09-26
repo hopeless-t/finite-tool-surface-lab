@@ -1,0 +1,54 @@
+{
+  "schema_version": "ftsl-reference-verification-v0.1",
+  "study_id": "BENCH-003",
+  "candidate": {
+    "source_commit": "f5328308d7b436becf6097231e6383720f1ba14e",
+    "workflow_run_id": 36242144911,
+    "artifact_id": 10906331126,
+    "artifact_digest": "sha256:96015668c446af1d7ed561aa8bed76ada532a9c38e0cfdd6ba584e171e02685f",
+    "spec_sha256": "52387766c5ac3679167c3394a3f11a0f738a69cb964981a58b9038a01ebfc83e",
+    "observation_sha256": "019d4ec58cce84fd2e3c0b92e47fa0ec04bf312aa6bb8e1e421b812bf83db22c",
+    "observation_count": 483840,
+    "aggregate_rows": 10080,
+    "frontier_points": 2184,
+    "state": "PASS"
+  },
+  "post_analysis": {
+    "source_commit": "8306b62ec46b6815e98ae1b52072decdc16547c6",
+    "workflow_run_id": 36250772637,
+    "artifact_id": 10908544527,
+    "artifact_digest": "sha256:3f3163f1dccb0b5081dc6b00ff47e60d8a2c68bc875a76156a47f285251bed5d",
+    "mixtures": 60000,
+    "macro_conditions": 120,
+    "candidate_policies": 20,
+    "coverage_requirement": 0.99,
+    "feasible_at_no_tool_false_surface_0_05": 0,
+    "feasible_at_no_tool_false_surface_0_10": 1,
+    "state": "PASS"
+  },
+  "independent_replay": {
+    "source_commit": "e058d7e052d41dcfdc09f079fbd0fd55e4a0d2ce",
+    "workflow_run_id": 36251020964,
+    "python_3_12": {
+      "artifact_id": 10908719752,
+      "artifact_digest": "sha256:349b4a4e32e468b09b3d6beb013bf2f82da491e9fb537ca9b370546d33f58673"
+    },
+    "python_3_13": {
+      "artifact_id": 10909855008,
+      "artifact_digest": "sha256:000906f9c773d2adc610e36f793c7a00748fa54cc53fe2a29b280c3521d721c3"
+    },
+    "comparison_artifact_id": 10909815226,
+    "comparison_artifact_digest": "sha256:35968e72247b1788001b8a4c3d90f99147a77e0c78808b28596d2732cce8477f",
+    "comparison": "BYTE_IDENTICAL_STABLE_OUTPUTS",
+    "observation_sha256": "019d4ec58cce84fd2e3c0b92e47fa0ec04bf312aa6bb8e1e421b812bf83db22c",
+    "state": "PASS"
+  },
+  "stable_output_sha256": {
+    "aggregates.jsonl": "da1178bef322b0adc3c920378ce73173715c327a6bd6704fa4980a99314bb080",
+    "frontier.json": "16308400cc3df2ca0f3ffc280d8d3c4164900baa81b748ae4e67aa6f9c6d6e0b",
+    "msts.json": "11a3a190d681eddc5205551ba46e3fb1c2e6ad76f71081cd2a5e600634a55a79",
+    "observation_digest.json": "b5edfa727eff30b566c45f6b268ca0c8af711e8fd5f478ac286b6fb09959b61a",
+    "summary.json": "c80892da933912070006b933b8d1b6f9462da980be2cf379a0c4360e4316a5b2"
+  },
+  "promotion_gate": "PASS"
+}

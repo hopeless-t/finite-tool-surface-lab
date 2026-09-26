@@ -1,0 +1,53 @@
+name: BENCH-001 Design Monte Carlo
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/bench-001-design-mc.yml"
+      - "src/finite_tool_surface_lab/bench001_design_mc.py"
+      - "specs/BENCH-001.json"
+      - "research/COUNCIL-006_BENCH001_DESIGN.md"
+      - "pyproject.toml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bench-001-design-mc-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  design-study:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install analysis tool
+        run: python -m pip install -e ".[analysis]"
+
+      - name: Run design Monte Carlo
+        run: |
+          mkdir -p evidence/BENCH-001-DESIGN
+          python -m finite_tool_surface_lab.bench001_design_mc \
+            --simulations 250000 \
+            --repeats-per-cell 64 \
+            --seed 2026092601 \
+            --out evidence/BENCH-001-DESIGN/design-study.json \
+            --markdown evidence/BENCH-001-DESIGN/summary.md
+
+      - name: Summary
+        run: cat evidence/BENCH-001-DESIGN/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BENCH-001-DESIGN-${{ github.run_id }}
+          path: evidence/BENCH-001-DESIGN/
+          if-no-files-found: error
+          retention-days: 90

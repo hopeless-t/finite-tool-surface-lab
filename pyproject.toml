@@ -9,5 +9,10 @@ description = "Reproducible research on finite active tool surfaces for AI worke
 requires-python = ">=3.12"
 license = {text = "MIT"}
 
+[project.optional-dependencies]
+analysis = [
+  "numpy>=2,<3",
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -149,15 +149,22 @@ non-truth defer <= 0.05
 Local preflight:
 
 ~~~text
+Canonical GitHub replay:
+
+~~~text
 alpha=.25  RULE_GATE_V0 feasible 18,857 / 20,000
-alpha=1    RULE_GATE_V0 feasible 19,990 / 20,000
+alpha=1    RULE_GATE_V0 feasible 19,991 / 20,000
 alpha=4    RULE_GATE_V0 feasible 20,000 / 20,000
 
 all other non-oracle policies:
 0 feasible mixtures
 ~~~
 
-The GitHub post-analysis workflow is the reproducibility path for this result.
+The earlier local preflight produced 19,990 rather than 19,991 at alpha=1.
+The GitHub artifact is canonical for the recorded result.
+
+The one-mixture discrepancy does not change the qualitative conclusion, but it
+is retained rather than rounded away.
 
 This is synthetic workload robustness only.
 

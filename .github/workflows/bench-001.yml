@@ -1,0 +1,67 @@
+name: BENCH-001 Fixed-k Surface Sweep
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/bench-001.yml"
+      - "src/finite_tool_surface_lab/retrieval.py"
+      - "src/finite_tool_surface_lab/bench_metrics.py"
+      - "src/finite_tool_surface_lab/bench001.py"
+      - "specs/BENCH-001.json"
+      - "docs/BENCH-001.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bench-001-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Run full benchmark
+        run: |
+          python -m finite_tool_surface_lab.bench001 \
+            --spec specs/BENCH-001.json \
+            --out evidence/BENCH-001/run
+
+      - name: Summary
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          s=json.load(open("evidence/BENCH-001/run/summary.json"))
+          print("# BENCH-001")
+          print()
+          print(f"State: **{s['state']}**")
+          print(f"Raw rows: **{s['raw_rows']:,}**")
+          print(f"Invalid k rows: **{s['invalid_rows']:,}**")
+          print(f"Aggregate rows: **{s['aggregate_rows']:,}**")
+          print(f"Frontier points: **{s['frontier_points']:,}**")
+          print(
+              "Max empirical RANDOM-k recall error: "
+              f"**{s['max_empirical_random_recall_abs_error']:.6f}**"
+          )
+          print()
+          print(s["claim_ceiling"])
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BENCH-001-${{ github.run_id }}
+          path: evidence/BENCH-001/run/
+          if-no-files-found: error
+          retention-days: 90

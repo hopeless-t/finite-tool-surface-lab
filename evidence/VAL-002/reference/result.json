@@ -1,0 +1,11 @@
+{
+  "alias_equivalence_group_count": 35,
+  "catalog_sha256": "98fdcda9561222de0ed0a074e4572760f007b3471fc5a4241c4ac34e719866ba",
+  "comparison": "BYTE_IDENTICAL_NODE20_NODE22",
+  "cross_type_homonym_group_count": 71,
+  "sampled_alias_pairs": 35,
+  "sampled_homonym_pairs": 64,
+  "state": "PASS",
+  "study_id": "VAL-002",
+  "tool_count": 384
+}

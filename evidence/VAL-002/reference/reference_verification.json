@@ -1,0 +1,21 @@
+{
+  "schema_version": "ftsl-reference-verification-v0.1",
+  "study_id": "VAL-002",
+  "source_commit": "92878f14989e12e9801f39b5ba5cbc0f20a07991",
+  "workflow_run_id": 36237206047,
+  "node20": {
+    "artifact_id": 10904268925,
+    "artifact_digest": "sha256:7a16f564cbe2e8c86fe864febcd994424a907b82086d06a0422e49ff244a1a13"
+  },
+  "node22": {
+    "artifact_id": 10904825383,
+    "artifact_digest": "sha256:3e1d2070ba17c479ec969889e6eb41297b016f3b2151e118a0619addd152ee71"
+  },
+  "comparison": {
+    "artifact_id": 10904487932,
+    "artifact_digest": "sha256:ed0be63fca188bef8153c04796f30a326e3f1a1488f88d421701b1d9209253a4",
+    "result": "BYTE_IDENTICAL_NODE20_NODE22"
+  },
+  "catalog_sha256": "98fdcda9561222de0ed0a074e4572760f007b3471fc5a4241c4ac34e719866ba",
+  "promotion_gate": "PASS"
+}

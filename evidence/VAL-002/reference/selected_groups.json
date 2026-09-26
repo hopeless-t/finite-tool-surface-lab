@@ -1,0 +1,75 @@
+{
+  "schema_version": "ftsl-val002-selected-groups-v0.1",
+  "equivalence_examples": [
+    {
+      "namespace": "vec3",
+      "members": [
+        "dist",
+        "distance"
+      ]
+    },
+    {
+      "namespace": "vec3",
+      "members": [
+        "len",
+        "length"
+      ]
+    },
+    {
+      "namespace": "mat4",
+      "members": [
+        "mul",
+        "multiply"
+      ]
+    },
+    {
+      "namespace": "quat",
+      "members": [
+        "sqrLen",
+        "squaredLength"
+      ]
+    }
+  ],
+  "homonym_examples": [
+    {
+      "name": "distance",
+      "members": [
+        "vec2.distance",
+        "vec3.distance",
+        "vec4.distance"
+      ]
+    },
+    {
+      "name": "cross",
+      "members": [
+        "vec2.cross",
+        "vec3.cross",
+        "vec4.cross"
+      ]
+    },
+    {
+      "name": "create",
+      "members": [
+        "euler.create",
+        "mat2.create",
+        "mat2d.create",
+        "mat3.create",
+        "mat4.create",
+        "quat.create",
+        "quat2.create",
+        "vec2.create",
+        "vec3.create",
+        "vec4.create"
+      ]
+    },
+    {
+      "name": "determinant",
+      "members": [
+        "mat2.determinant",
+        "mat2d.determinant",
+        "mat3.determinant",
+        "mat4.determinant"
+      ]
+    }
+  ]
+}

@@ -12,6 +12,12 @@ from finite_tool_surface_lab.adaptive import (
     tie_blocks_preserved,
 )
 from finite_tool_surface_lab.bench002 import run_benchmark, write_evidence
+from finite_tool_surface_lab.retrieval import (
+    serialized_stub_byte_sizes,
+    surface_serialized_bytes,
+    surface_serialized_bytes_from_sizes,
+)
+from finite_tool_surface_lab.synthetic import generate_registry
 from finite_tool_surface_lab.spec import load_spec
 
 
@@ -62,6 +68,18 @@ class Bench002Tests(unittest.TestCase):
             largest_score_drop_surface(ranked),
             ("A", "B"),
         )
+
+    def test_precomputed_surface_bytes_are_exact(self) -> None:
+        registry = generate_registry(
+            n=32, overlap=0.5, alias_rate=0.15, seed=20260927
+        )
+        sizes = serialized_stub_byte_sizes(registry)
+        ids = tuple(tool["tool_id"] for tool in registry["tools"])
+        for surface in ((), ids[:1], ids[:7], ids):
+            self.assertEqual(
+                surface_serialized_bytes(registry, surface),
+                surface_serialized_bytes_from_sizes(sizes, surface),
+            )
 
     def test_smoke_contract(self) -> None:
         spec = load_spec(ROOT / "specs" / "BENCH-002.json")

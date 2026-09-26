@@ -69,3 +69,23 @@ def surface_serialized_bytes(
     }
     payload = [lookup[tool_id] for tool_id in surface]
     return len(canonical_json_bytes(payload))
+
+
+def serialized_stub_byte_sizes(
+    registry: dict[str, Any],
+) -> dict[str, int]:
+    """Precompute exact compact-JSON byte length for each serialized stub."""
+    return {
+        tool["tool_id"]: len(canonical_json_bytes(tool["serialized_stub"])) - 1
+        for tool in registry["tools"]
+    }
+
+
+def surface_serialized_bytes_from_sizes(
+    sizes: dict[str, int],
+    surface: tuple[str, ...],
+) -> int:
+    """Exact byte length of canonical_json_bytes(list_of_serialized_stubs))."""
+    if not surface:
+        return 3  # [] plus newline
+    return 3 + (len(surface) - 1) + sum(sizes[tool_id] for tool_id in surface)

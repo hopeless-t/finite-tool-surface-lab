@@ -20,7 +20,8 @@ from .adaptive import (
 )
 from .bench_metrics import chance_all_gold, chance_any_gold
 from .retrieval import (
-    surface_serialized_bytes,
+    serialized_stub_byte_sizes,
+    surface_serialized_bytes_from_sizes,
     token_jaccard_rank,
     token_jaccard_surface,
 )
@@ -43,6 +44,7 @@ def _canonical_row(
     parameter: float | int | None,
     surface: tuple[str, ...],
     ranked: list[tuple[str, float]],
+    serialized_sizes: dict[str, int],
 ) -> dict[str, Any]:
     gold = set(task["gold_tool_ids"])
     hits = len(gold & set(surface))
@@ -62,7 +64,9 @@ def _canonical_row(
         "policy_parameter": parameter,
         "policy_id": _policy_id(family, parameter),
         "selected_k": selected_k,
-        "surface_bytes": surface_serialized_bytes(registry, surface),
+        "surface_bytes": surface_serialized_bytes_from_sizes(
+            serialized_sizes, surface
+        ),
         "gold_count": gold_count,
         "gold_hits": hits,
         "top_score": top_score,
@@ -394,6 +398,7 @@ def run_benchmark(
                         alias_rate=alias_rate,
                         seed=seed,
                     )
+                    serialized_sizes = serialized_stub_byte_sizes(registry)
                     for task_type in parameters["task_types"]:
                         for repeat in range(repeats):
                             task = generate_task(
@@ -417,6 +422,7 @@ def run_benchmark(
                                     parameter=parameter,
                                     surface=surface,
                                     ranked=ranked,
+                                    serialized_sizes=serialized_sizes,
                                 )
                                 observation_hash.update(canonical_json_bytes(row))
                                 observation_count += 1

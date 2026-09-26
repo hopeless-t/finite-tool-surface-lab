@@ -1,20 +1,37 @@
-name: ci
+name: CI
 
 on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install test dependency
-        run: python -m pip install pytest
-      - name: Run tests
-        env:
-          PYTHONPATH: src
-        run: python -m pytest -q
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Compile
+        run: python -m compileall -q src tests
+
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: VAL-001 smoke
+        run: |
+          python -m finite_tool_surface_lab.val001 \
+            --spec specs/VAL-001.json \
+            --out runs/VAL-001-smoke \
+            --quick
+          python -m json.tool runs/VAL-001-smoke/metrics.json >/dev/null

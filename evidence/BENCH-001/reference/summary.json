@@ -1,0 +1,23 @@
+{
+  "aggregate_rows": 2808,
+  "checks": {
+    "all_task_records_emitted": true,
+    "gold_coverage_recomputable_from_raw_records": true,
+    "invalid_k_not_silently_clipped": true,
+    "raw_and_aggregate_metrics_agree": true,
+    "required_policies_present": true,
+    "surface_count_matches_policy_output": true
+  },
+  "claim_ceiling": "Retrieval/surface benchmark only; no end-to-end Worker performance claim.",
+  "frontier_points": 329,
+  "invalid_rows": 4608,
+  "lexical_all_gold_rate_range": [
+    0.0,
+    1.0
+  ],
+  "max_empirical_random_recall_abs_error": 0.171875,
+  "mode": "FULL",
+  "raw_rows": 179712,
+  "state": "PASS",
+  "study_id": "BENCH-001"
+}

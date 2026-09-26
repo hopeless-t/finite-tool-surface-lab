@@ -1,0 +1,38 @@
+{
+  "schema_version": "ftsl-bench001-selected-findings-v0.1",
+  "study_id": "BENCH-001",
+  "low_ambiguity": {
+    "definition": "overlap in {0.00, 0.25}",
+    "token_jaccard_exact_gold": {
+      "single_tool_k1_min_rate": 1,
+      "multi_tool_k2_min_rate": 1
+    },
+    "mean_surface_bytes_fraction_of_full": {
+      "single_tool_k1": {
+        "N32": 0.03166650248924121,
+        "N128": 0.00793529382935761,
+        "N512": 0.0019796615355958625,
+        "N2048": 0.0004945705648682012
+      },
+      "multi_tool_k2": {
+        "N32": 0.06319305800597752,
+        "N128": 0.0157478226988978,
+        "N512": 0.00393813478042834,
+        "N2048": 0.0009849580893719373
+      }
+    }
+  },
+  "high_ambiguity_example_N2048_k50": {
+    "overlap_0_50": {
+      "single_tool_all_gold_rate": 1,
+      "multi_tool_all_gold_rate": 0.3385416666666667,
+      "multi_tool_mean_gold_recall": 0.5703125
+    },
+    "overlap_0_75": {
+      "single_tool_all_gold_rate": 1,
+      "multi_tool_all_gold_rate": 0.28125,
+      "multi_tool_mean_gold_recall": 0.5520833333333334
+    }
+  },
+  "interpretation_boundary": "High-overlap multi-tool degradation is partly construction-induced by generator v0.1 query-prefix identity erasure. No universal overlap threshold claim."
+}

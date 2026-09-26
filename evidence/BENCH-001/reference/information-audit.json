@@ -1,0 +1,25 @@
+{
+  "alias_semantics": "In synthetic generator v0.1, aliases are attached to candidate tool metadata but query_tokens are drawn from description_tokens; alias_rate therefore does not test alias-query resolution.",
+  "checks": {
+    "high_overlap_multi_prefix_erases_tool_unique_tokens": true,
+    "low_overlap_multi_k2_perfect": true,
+    "low_overlap_single_k1_perfect": true,
+    "single_query_unique_visibility_decreases_with_overlap": true
+  },
+  "claim_ceiling": "Generator/benchmark interpretation audit only; no Worker performance or universal overlap threshold claim.",
+  "construction": [
+    {"multi_query_prefix_tokens_per_gold":4,"multi_query_unique_tokens_per_gold_in_prefix":4,"overlap":0.0,"shared_description_tokens":0,"single_query_unique_visibility_probability":1.0,"unique_description_tokens":8},
+    {"multi_query_prefix_tokens_per_gold":4,"multi_query_unique_tokens_per_gold_in_prefix":2,"overlap":0.25,"shared_description_tokens":2,"single_query_unique_visibility_probability":1.0,"unique_description_tokens":6},
+    {"multi_query_prefix_tokens_per_gold":4,"multi_query_unique_tokens_per_gold_in_prefix":0,"overlap":0.5,"shared_description_tokens":4,"single_query_unique_visibility_probability":0.9761904761904762,"unique_description_tokens":4},
+    {"multi_query_prefix_tokens_per_gold":4,"multi_query_unique_tokens_per_gold_in_prefix":0,"overlap":0.75,"shared_description_tokens":6,"single_query_unique_visibility_probability":0.7777777777777778,"unique_description_tokens":2}
+  ],
+  "interpretation": "The sharp multi-tool degradation beginning at overlap>=0.50 is partly construction-induced: the first four description tokens used per selected tool are all shared at those overlap levels, so exact tool identity is absent from the query prefix. Treat the regime as a controlled information-ambiguity stress test, not a universal semantic-overlap threshold.",
+  "observed": [
+    {"multi_tool_token_jaccard_k2_all_gold":{"max":1.0,"mean":1.0,"min":1.0},"overlap":0.0,"single_tool_token_jaccard_k1_all_gold":{"max":1.0,"mean":1.0,"min":1.0}},
+    {"multi_tool_token_jaccard_k2_all_gold":{"max":1.0,"mean":1.0,"min":1.0},"overlap":0.25,"single_tool_token_jaccard_k1_all_gold":{"max":1.0,"mean":1.0,"min":1.0}},
+    {"multi_tool_token_jaccard_k2_all_gold":{"max":0.046875,"mean":0.014322916666666666,"min":0.0},"overlap":0.5,"single_tool_token_jaccard_k1_all_gold":{"max":1.0,"mean":0.9856770833333334,"min":0.953125}},
+    {"multi_tool_token_jaccard_k2_all_gold":{"max":0.0625,"mean":0.01171875,"min":0.0},"overlap":0.75,"single_tool_token_jaccard_k1_all_gold":{"max":0.890625,"mean":0.80859375,"min":0.71875}}
+  ],
+  "state": "PASS",
+  "study_id": "BENCH-001-INFORMATION-AUDIT"
+}

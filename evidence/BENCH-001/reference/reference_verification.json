@@ -1,0 +1,67 @@
+{
+  "schema_version": "ftsl-reference-verification-v0.1",
+  "study_id": "BENCH-001",
+  "candidate": {
+    "source_commit": "158f7417aa76342e2cd4f0a75fb1b3328ec3a721",
+    "workflow_run_id": 36222829153,
+    "job_id": 108351174955,
+    "artifact_id": 10899985944,
+    "artifact_digest": "sha256:eaea203f47a581d51b5d2300ab467ccf1bb7fda1560a734e189d8e8d3ff9aecc",
+    "spec_sha256": "37584726eaee70fa759e4d4f23628448d847b0d00a7f4f5d1ed6b49ae5b19ca2"
+  },
+  "stable_output_sha256": {
+    "summary.json": "59c6e5b6a51bd4aee314bcd28c40a7c5ed5828e6cbd3c118e4100f8d35ebf3ab",
+    "per_task.jsonl": "f458a86c17213de7be1c81c9968ddd2f92e9545ff1250c5da06ca00b2fbf8441",
+    "invalid_cells.jsonl": "ea2950b669e4ac706a3caa2a785b764b12545a2ac3f6d3e607b13c4dd2c6e1ce",
+    "aggregates.jsonl": "0568802912d38d2140419d3ee365ff428fcb7f5b5d0f75c9edb43fa127bf297b",
+    "retrieval_frontier.json": "7ea873ecfd18397d9a9c445888d1072fc2ba44ce93919c37cdb8de77cedcad74",
+    "manifest.json": "e50eb2f4de5e9ce0fe63f58e5499612b49280eaa6cf651f7c4c389950799c49c"
+  },
+  "design_monte_carlo": {
+    "workflow_run_id": 36222630075,
+    "job_id": 108350623751,
+    "artifact_id": 10899851077,
+    "artifact_digest": "sha256:b11942d2c894c6530d176dee176fe2eaf7038c401bf0fc3162f78782142c771c",
+    "simulations": 250000,
+    "repeats_per_exact_cell": 64,
+    "primary_decision": "EXACT_HYPERGEOMETRIC_IS_PRIMARY_CHANCE_BASELINE"
+  },
+  "information_audit": {
+    "source_commit": "38ae7010e6f39109c4d2ddd9d97749fbb517e5a8",
+    "workflow_run_id": 36232878478,
+    "job_id": 108379224949,
+    "artifact_id": 10903406512,
+    "artifact_digest": "sha256:3ea7ef670d0303286859d48c8ef4918955c3baca096508c39c3875857f8e068e",
+    "information_audit_sha256": "73388309e7b57955ad222a9e3bbc30467a5dc78949341e5a75f5ab094fcaee27",
+    "summary_sha256": "131fe9defe7c0cbedeccfd4eecf98339dbfd4df8c97ad919ec50c22cb5cca2ce",
+    "state": "PASS"
+  },
+  "independent_replay": {
+    "source_commit": "dafed96e15a525b3f17a267961e07ba3d6465815",
+    "workflow_run_id": 36232999281,
+    "python_3_12": {
+      "job_id": 108379551601,
+      "artifact_id": 10903291065,
+      "artifact_digest": "sha256:5f8dfc799e7a61104107d69f6a2368feea8bfc674d0af1dcc35c36095837b5f4"
+    },
+    "python_3_13": {
+      "job_id": 108379551716,
+      "artifact_id": 10902862832,
+      "artifact_digest": "sha256:6052ae7d3662a87763ab38d3f9b2ae727b9c8691a3f271f65ed67a0384cd94e6"
+    },
+    "compare_job_id": 108379664821,
+    "comparison_artifact_id": 10902758427,
+    "comparison_artifact_digest": "sha256:c20d7fe8e899baedbe557504e171b2f18c10d2ee3d895ea813f7e4412cd6d031",
+    "comparison": "BYTE_IDENTICAL_STABLE_OUTPUTS",
+    "state": "PASS"
+  },
+  "canonical_storage": {
+    "mode": "COMPACT_DIGEST_BOUND",
+    "raw_per_task_committed": false,
+    "invalid_cells_committed": false,
+    "aggregates_committed": false,
+    "retrieval_frontier_committed": false,
+    "regeneration": "Use exact candidate source commit + frozen BENCH-001 spec."
+  },
+  "promotion_gate": "PASS"
+}

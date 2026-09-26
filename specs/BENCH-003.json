@@ -1,0 +1,57 @@
+{
+  "schema_version": "ftsl-experiment-v0.1",
+  "id": "BENCH-003",
+  "lane": "BENCH",
+  "status": "FROZEN",
+  "question": "How do distractor topology, state validity, risk, and valid-equivalence structure change the active Tool Surface required to preserve capability?",
+  "seed": 20260926,
+  "parameters": {
+    "evaluation_seeds": [20260926, 20260927, 20260928],
+    "registry_sizes": [32, 128, 512, 2048],
+    "task_types": ["single_tool", "multi_tool", "no_tool"],
+    "repeats_per_cell": 16,
+    "targeted_distractors_per_required_capability": [0, 1, 3, 7, 15],
+    "stress_families": [
+      "RANDOM_IRRELEVANT",
+      "SEMANTIC_NEAR",
+      "SCHEMA_COMPATIBLE",
+      "PREMATURE_STATE",
+      "RISKY_RELEVANT",
+      "CROSS_DOMAIN_HOMONYM",
+      "VALID_EQUIVALENT",
+      "MIXED"
+    ],
+    "primitive_axes": {
+      "semantic_proximity": ["far", "near"],
+      "schema_overlap": ["low", "high"],
+      "state_validity": ["valid_now", "premature"],
+      "risk_level": ["low", "high"],
+      "domain_relation": ["cross_domain", "same_domain"],
+      "capability_relation": ["wrong", "valid_equivalent"]
+    },
+    "fixed_k_values": [0, 1, 2, 3, 5, 8, 16, 32],
+    "relative_top_thresholds": [0.25, 0.5, 0.75, 0.9],
+    "cumulative_mass_thresholds": [0.5, 0.7, 0.8, 0.9, 0.95],
+    "msts_epsilons": [0.0, 0.01, 0.02, 0.05, 0.1],
+    "synthetic_generator_version": "ftsl-distractor-v0.1",
+    "external_lane": {
+      "enabled_after": "VAL-002 PASS",
+      "candidate": "pmndrs/math@0.1.0",
+      "canonical_basis": false
+    }
+  },
+  "acceptance": {
+    "registry_size_constant_within_matched_condition": true,
+    "gold_capability_identity_preserved": true,
+    "valid_equivalent_not_counted_as_wrong": true,
+    "wrong_distractor_labels_recomputable": true,
+    "state_validity_labels_recomputable": true,
+    "risk_labels_recomputable": true,
+    "equivalence_classes_symmetric_and_transitive": true,
+    "adaptive_zero_evidence_abstains": true,
+    "tie_blocks_not_split": true,
+    "observation_digest_present": true,
+    "aggregate_task_counts_match": true
+  },
+  "claim_ceiling": "Retrieval/surface robustness to frozen distractor topology and equivalence structure only; no end-to-end Worker performance or universal production policy claim."
+}

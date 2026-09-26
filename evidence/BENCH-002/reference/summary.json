@@ -1,0 +1,13 @@
+{
+  "adaptive_frontier_points": 542,
+  "adaptive_no_tool_nonempty_rate_range": [0.0, 0.0],
+  "aggregate_rows": 3276,
+  "claim_ceiling": "Synthetic adaptive retrieval/surface benchmark only; no end-to-end Worker performance claim.",
+  "fixed_or_full_frontier_points": 293,
+  "frontier_points": 835,
+  "mode": "FULL",
+  "observation_count": 314496,
+  "observation_sha256": "b2070ee08502491498ced1862cf0b586bb79fddbbb1b9ee4faaf2ce395b86aeb",
+  "state": "PASS",
+  "study_id": "BENCH-002"
+}

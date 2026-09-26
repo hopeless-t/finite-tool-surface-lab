@@ -1,0 +1,10 @@
+{
+  "evaluation_seeds": [20260927, 20260928, 20260929],
+  "mode": "FULL",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "python": "3.12.14",
+  "schema_version": "ftsl-benchmark-manifest-v0.1",
+  "source_commit": "6268d7c6ef51ddbb5d1a25467446fd02c1855096",
+  "spec_sha256": "40b2428761f1601f917bdd7f6b579bc574822452103088c932a17bbcbfaa87fb",
+  "study_id": "BENCH-002"
+}

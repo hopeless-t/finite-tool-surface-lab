@@ -1,0 +1,46 @@
+{
+  "schema_version": "ftsl-reference-verification-v0.1",
+  "study_id": "BENCH-002",
+  "candidate": {
+    "source_commit": "6268d7c6ef51ddbb5d1a25467446fd02c1855096",
+    "workflow_run_id": 36233741224,
+    "artifact_id": 10903158359,
+    "artifact_digest": "sha256:917008e625e76ec774ecf90828a915b92283ebdb8c10bc944be739ea03a029ae",
+    "spec_sha256": "40b2428761f1601f917bdd7f6b579bc574822452103088c932a17bbcbfaa87fb",
+    "observation_sha256": "b2070ee08502491498ced1862cf0b586bb79fddbbb1b9ee4faaf2ce395b86aeb"
+  },
+  "workload_monte_carlo": {
+    "source_commit": "89cd0418ace3243f4e0d9d14168e3e0d80f36b6a",
+    "workflow_run_id": 36233978830,
+    "artifact_id": 10903920371,
+    "artifact_digest": "sha256:6e12c6f8eb669368ac45b8b0e0ae63e35868e03e1cb954d5a138d7064b98a9ea",
+    "mixtures": 60000,
+    "constrained_policy_selections": 300000,
+    "state": "PASS"
+  },
+  "independent_replay": {
+    "source_commit": "a801457ce5dde5e918f98fabd0ba6a83bede3976",
+    "workflow_run_id": 36234093381,
+    "python_3_12": {
+      "artifact_id": 10902769983,
+      "artifact_digest": "sha256:1caa42c2d970ad582615523e299bfd771f0cc2ee33b6cfced794aeec13bb4514"
+    },
+    "python_3_13": {
+      "artifact_id": 10903233838,
+      "artifact_digest": "sha256:387391735046c6f0ae5625711a492c10d938f15d9a4bcb6a79d0d27da56dd437"
+    },
+    "comparison_artifact_id": 10903203790,
+    "comparison_artifact_digest": "sha256:1eb11a0c810ad6fb629356bcb20891c5808d9ff2a5030b76c8ea2afb563cc5d3",
+    "comparison": "BYTE_IDENTICAL_STABLE_OUTPUTS",
+    "locally_recomputed_stable_hashes_match": true,
+    "state": "PASS"
+  },
+  "stable_output_sha256": {
+    "aggregates.jsonl": "ab8e2218a9a0f121068f3693fafc2595973210270dbb4d0473dc978c174d1d67",
+    "frontier.json": "1fdebadb30e00fe056d3b9bb68cfe5c99a3ba2e750823002583b0edd56d4e2ef",
+    "msts.json": "3a9f931ac2323f721866390805811a737ef79ac4bedf6f8718fc5989d70b34bd",
+    "observation_digest.json": "1f5876b7fce013c270f0f827b44bfda82718f2640c407b662b04f26ead9cef00",
+    "summary.json": "1bf2e8d815d31ab9939a15730c1910821478c25948bcd95909b6a41a2b59efca"
+  },
+  "promotion_gate": "PASS"
+}

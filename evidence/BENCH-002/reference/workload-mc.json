@@ -1,0 +1,14 @@
+{
+  "artifact_id": 10903920371,
+  "artifact_digest": "sha256:6e12c6f8eb669368ac45b8b0e0ae63e35868e03e1cb954d5a138d7064b98a9ea",
+  "workflow_run_id": 36233978830,
+  "total_workload_mixtures": 60000,
+  "total_constrained_policy_selections": 300000,
+  "key_result": {
+    "epsilon_le_0_01_relative_top_0_9_frequency": 1.0,
+    "epsilon_0_05_frequency_range": [0.87815, 0.9662],
+    "epsilon_0_10_frequency_range": [0.6779, 0.93745]
+  },
+  "state": "PASS",
+  "claim_ceiling": "Synthetic workload-mixture robustness analysis over BENCH-002 aggregate conditions; not Worker performance."
+}

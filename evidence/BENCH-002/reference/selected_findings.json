@@ -1,0 +1,51 @@
+{
+  "schema_version": "ftsl-bench002-selected-findings-v0.1",
+  "study_id": "BENCH-002",
+  "relative_top_0_9": {
+    "conditions": 96,
+    "min_all_gold_rate": 1,
+    "mean_all_gold_rate": 1,
+    "mean_selected_k": 11.973090277777777,
+    "min_selected_k": 1,
+    "max_selected_k": 91.05208333333333,
+    "mean_surface_bytes": 1521.448459201389
+  },
+  "full_reference": {
+    "mean_all_gold_rate": 1,
+    "mean_selected_k": 680,
+    "mean_surface_bytes": 85782.66666666667
+  },
+  "fixed_k_32_reference": {
+    "min_all_gold_rate": 0.11458333333333333,
+    "mean_all_gold_rate": 0.9159071180555556,
+    "mean_selected_k": 32,
+    "mean_surface_bytes": 3795.1438802083335
+  },
+  "relative_threshold_sweep": [
+    {
+      "threshold": 0.25,
+      "mean_selected_k": 23.772786458333332,
+      "mean_surface_bytes": 2990.8391927083335,
+      "min_all_gold_rate": 1
+    },
+    {
+      "threshold": 0.5,
+      "mean_selected_k": 16.327256944444443,
+      "mean_surface_bytes": 2072.068901909722,
+      "min_all_gold_rate": 1
+    },
+    {
+      "threshold": 0.75,
+      "mean_selected_k": 12.11404079861111,
+      "mean_surface_bytes": 1539.3365885416667,
+      "min_all_gold_rate": 1
+    },
+    {
+      "threshold": 0.9,
+      "mean_selected_k": 11.973090277777777,
+      "mean_surface_bytes": 1521.448459201389,
+      "min_all_gold_rate": 1
+    }
+  ],
+  "interpretation_boundary": "Synthetic retrieval/surface result only. RELATIVE_TOP:0.9 is not a universal threshold and no Worker-performance claim is made."
+}

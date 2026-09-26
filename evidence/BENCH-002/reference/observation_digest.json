@@ -1,0 +1,6 @@
+{
+  "algorithm": "sha256",
+  "canonical_row_encoding": "sorted-key compact UTF-8 JSON plus newline",
+  "observation_count": 314496,
+  "sha256": "b2070ee08502491498ced1862cf0b586bb79fddbbb1b9ee4faaf2ce395b86aeb"
+}

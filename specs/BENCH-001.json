@@ -1,0 +1,26 @@
+{
+  "schema_version": "ftsl-experiment-v0.1",
+  "id": "BENCH-001",
+  "lane": "BENCH",
+  "status": "FROZEN",
+  "question": "How do deterministic candidate coverage and surface exposure change across fixed-k policies as registry size and overlap vary?",
+  "seed": 20260926,
+  "parameters": {
+    "registry_sizes": [32, 128, 512, 2048],
+    "task_types": ["single_tool", "multi_tool", "no_tool"],
+    "overlap_levels": [0.0, 0.25, 0.5, 0.75],
+    "alias_rates": [0.0, 0.05, 0.15],
+    "k_values": [1, 2, 3, 5, 8, 13, 20, 32, 50],
+    "policies": ["ORACLE", "FULL", "RANDOM_K", "TOKEN_JACCARD"],
+    "repeats_per_cell": 64
+  },
+  "acceptance": {
+    "required_policies_present": true,
+    "all_task_records_emitted": true,
+    "surface_count_matches_policy_output": true,
+    "gold_coverage_recomputable_from_raw_records": true,
+    "invalid_k_not_silently_clipped": true,
+    "raw_and_aggregate_metrics_agree": true
+  },
+  "claim_ceiling": "Retrieval/surface benchmark only; no end-to-end Worker performance claim."
+}

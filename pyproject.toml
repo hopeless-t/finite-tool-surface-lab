@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finite-tool-surface-lab"
+version = "0.0.1"
+description = "Reproducible research on finite active tool surfaces for AI workers."
+requires-python = ">=3.12"
+license = {text = "MIT"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -139,14 +139,22 @@ coverage requirement = 0.99
 The key test asks whether any current non-oracle policy can also keep conditional
 no-tool nonempty-surface rate below 5% or 10%.
 
-Local preflight found **0 feasible mixtures out of 60,000** at both ceilings.
+The GitHub canonical replay found:
 
-The GitHub post-analysis workflow is the canonical reproducibility path for
-this result.
+~~~text
+5% no-tool false-surface ceiling  -> 0 / 60,000 feasible
+10% ceiling                       -> 1 / 60,000 feasible
+                                   (alpha=.25: 1 / 20,000)
+~~~
+
+So this is not an absolute impossibility theorem. It is strong synthetic
+evidence that the current depth/selection family almost never satisfies a
+strict no-tool admission ceiling while preserving >=0.99 tool-required
+coverage.
 
 This is not proof that an admission gate will succeed. It is evidence that the
 current family of depth/selection policies does not solve the no-tool admission
-problem under the frozen synthetic workload family.
+problem robustly under the frozen synthetic workload family.
 
 ## Pseudo-Council — next bounded experiment
 

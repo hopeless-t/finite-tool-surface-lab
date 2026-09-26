@@ -303,10 +303,11 @@ def workload_mc(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "candidate_policy_count": len(policies),
         "mixtures_total": MIXTURES_PER_ALPHA * len(ALPHAS),
         "interpretation": (
-            "No current non-oracle depth/selection policy is feasible at "
-            "5% or 10% no-tool false-surface ceilings in the frozen 60k "
-            "synthetic workload mixtures. This is evidence for separating "
-            "tool-need admission from surface-depth selection."
+            "At a 5% no-tool false-surface ceiling, no current non-oracle "
+            "depth/selection policy is feasible in the frozen 60k mixtures. "
+            "At 10%, exactly one sparse-workload mixture is feasible. This "
+            "still strongly motivates separating tool-need admission from "
+            "surface-depth selection without claiming absolute impossibility."
         ),
         "results": results,
     }

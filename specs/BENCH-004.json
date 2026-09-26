@@ -1,0 +1,100 @@
+{
+  "schema_version": "ftsl-experiment-v0.1",
+  "id": "BENCH-004",
+  "lane": "BENCH",
+  "status": "FROZEN",
+  "question": "Can an explicit Tool-Need Admission Gate decide whether any Tool Surface should exist, reducing no-tool false exposure while preserving tool-required admission under controlled ambiguity?",
+  "seed": 20260926,
+  "parameters": {
+    "evaluation_seeds": [20260927, 20260928, 20260929],
+    "registry_sizes": [32, 128, 512, 2048],
+    "truth_families": {
+      "ADMIT_TOOL_SURFACE": [
+        "EXTERNAL_STATE_REQUIRED",
+        "SIDE_EFFECT_REQUIRED",
+        "SPECIALIZED_COMPUTE_REQUIRED"
+      ],
+      "NO_TOOL_SURFACE": [
+        "LOCAL_CONTEXT_SUFFICIENT",
+        "IRRELEVANT_TOOL_MENU",
+        "PREMATURE_TOOL",
+        "USER_FORBIDS_TOOL"
+      ],
+      "DEFER": [
+        "MISSING_REQUIRED_INPUT",
+        "AMBIGUOUS_INTENT"
+      ]
+    },
+    "ambiguity_levels": [0.0, 0.25, 0.5, 0.75],
+    "candidate_plausibility": ["LOW", "HIGH"],
+    "repeats_per_cell": 32,
+    "retrieval_isomorphism_pairs": [
+      ["EXTERNAL_STATE_REQUIRED", "LOCAL_CONTEXT_SUFFICIENT"],
+      ["SIDE_EFFECT_REQUIRED", "USER_FORBIDS_TOOL"],
+      ["SPECIALIZED_COMPUTE_REQUIRED", "PREMATURE_TOOL"]
+    ],
+    "admission_features": [
+      "external_state_dependency",
+      "side_effect_intent",
+      "local_context_sufficiency",
+      "precondition_readiness",
+      "user_tool_permission",
+      "intent_clarity",
+      "menu_relevance"
+    ],
+    "policies": {
+      "references": [
+        "ORACLE_TRI_STATE",
+        "ALWAYS_ADMIT",
+        "RANDOM_PRIOR"
+      ],
+      "retrieval_only": {
+        "TOP_SCORE_THRESHOLD": [0.25, 0.5, 0.75, 0.9],
+        "TOP_MARGIN_THRESHOLD": [0.05, 0.1, 0.2, 0.4]
+      },
+      "admission_state": {
+        "RULE_GATE_V0": true,
+        "LINEAR_NEED_SCORE_BANDS": [
+          [0.1, 0.9],
+          [0.2, 0.8],
+          [0.3, 0.7],
+          [0.4, 0.6]
+        ]
+      }
+    },
+    "downstream_surface_policies": [
+      "RELATIVE_TOP:0.9",
+      "LARGEST_SCORE_DROP"
+    ],
+    "constraint_grid": {
+      "min_required_admit_recall": [0.9, 0.95, 0.99],
+      "max_no_tool_false_admit_rate": [0.01, 0.05, 0.1, 0.25],
+      "max_defer_rate": [0.0, 0.05, 0.1, 0.25]
+    },
+    "synthetic_generator_version": "ftsl-admission-v0.1",
+    "external_lanes": {
+      "bfcl_relevance_irrelevance": {
+        "status": "AUDIT_REQUIRED",
+        "canonical_basis": false
+      },
+      "decision_provider_shadow": {
+        "status": "HUMAN_APPROVAL_REQUIRED_FOR_PAID_PROVIDER",
+        "provider_contract": "p_need_tool -> threshold band -> ADMIT/NO_TOOL/DEFER",
+        "canonical_basis": false
+      }
+    }
+  },
+  "acceptance": {
+    "truth_label_recomputable": true,
+    "truth_not_present_in_gate_input": true,
+    "retrieval_isomorphism_pairs_exact": true,
+    "retrieval_score_overlap_present": true,
+    "defer_not_counted_as_correct_admission": true,
+    "gate_cannot_grant_execution_authority": true,
+    "downstream_surface_skipped_on_no_tool": true,
+    "downstream_surface_skipped_on_defer": true,
+    "observation_digest_present": true,
+    "aggregate_task_counts_match": true
+  },
+  "claim_ceiling": "Synthetic Tool-Need admission and surface-exposure evidence only; no end-to-end Worker success, provider superiority, production safety, or MVCA Mainline policy claim."
+}

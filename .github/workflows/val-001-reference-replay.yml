@@ -1,0 +1,107 @@
+name: VAL-001 Reference Replay
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/val-001-reference-replay.yml"
+      - "src/finite_tool_surface_lab/synthetic.py"
+      - "src/finite_tool_surface_lab/policies.py"
+      - "src/finite_tool_surface_lab/validation.py"
+      - "src/finite_tool_surface_lab/evidence.py"
+      - "src/finite_tool_surface_lab/val001.py"
+      - "specs/VAL-001.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: val-001-reference-replay-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  replay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Full deterministic replay
+        run: |
+          python -m finite_tool_surface_lab.val001 \
+            --spec specs/VAL-001.json \
+            --out "evidence/VAL-001/replay-${{ matrix.python }}"
+
+      - name: Stable research-output digests
+        run: |
+          cd "evidence/VAL-001/replay-${{ matrix.python }}"
+          sha256sum metrics.json random_calibration.jsonl cell_digests.jsonl             | sort -k2 > stable-digests.sha256
+          cat stable-digests.sha256
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: val001-replay-${{ matrix.python }}
+          path: evidence/VAL-001/replay-${{ matrix.python }}/
+          if-no-files-found: error
+          retention-days: 90
+
+  compare:
+    needs: replay
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: val001-replay-*
+          path: replay
+
+      - name: Compare stable outputs
+        run: |
+          set -euo pipefail
+          diff -u             replay/val001-replay-3.12/stable-digests.sha256             replay/val001-replay-3.13/stable-digests.sha256
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          roots = {
+              "3.12": Path("replay/val001-replay-3.12"),
+              "3.13": Path("replay/val001-replay-3.13"),
+          }
+          metrics = {
+              version: json.loads((root / "metrics.json").read_text())
+              for version, root in roots.items()
+          }
+          assert all(m["state"] == "PASS" for m in metrics.values())
+          assert metrics["3.12"] == metrics["3.13"]
+          print(json.dumps({
+              "state": "PASS",
+              "comparison": "BYTE_IDENTICAL_STABLE_OUTPUTS",
+              "python_versions": ["3.12", "3.13"],
+              "cells": metrics["3.12"]["cells"],
+              "tasks": metrics["3.12"]["tasks"],
+              "max_random_theory_abs_error": metrics["3.12"]["max_random_theory_abs_error"],
+          }, sort_keys=True))
+          PY
+
+      - name: Summary
+        run: |
+          echo '# VAL-001 independent reference replay' >> "$GITHUB_STEP_SUMMARY"
+          echo >> "$GITHUB_STEP_SUMMARY"
+          echo '- Python 3.12: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Python 3.13: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Stable research outputs: byte-identical' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Runtime-specific manifest fields are intentionally excluded from byte comparison.' >> "$GITHUB_STEP_SUMMARY"

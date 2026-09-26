@@ -1,218 +1,326 @@
 # finite-tool-surface-lab
 
-**How many tools should an AI Worker see?**
+A small, reproducible research lab for studying how much tool surface an AI Worker should see.
 
-A public research lab for studying the minimum sufficient active tool surface for LLM/agent workers.
-
-The central hypothesis:
-
-> Agent performance is not maximized by exposing the maximum number of available capabilities. It can improve when the Worker sees the smallest sufficient, evidence-selected working set of tools for the current task.
-
-This repository treats tool visibility as a finite computational resource, analogous to a working set in memory systems.
-
-~~~text
-Tool Warehouse
-      |
-      | many available capabilities
-      v
-Surface Policy / Retriever
-      |
-      | small active subset
-      v
-AI Worker
-      |
-      v
-Tool selection / abstention / execution
-~~~
+> **Core question:**  
+> Can an AI Worker preserve or improve task performance by seeing a smaller, evidence-selected active tool surface instead of the full available Tool Warehouse?
 
 ## Status
 
-OPEN RESEARCH. No MVCA Mainline authority, implementation authority, or production claim is granted by this repository.
+**Open research — repository bootstrap / Phase 0**
 
-Research Finding != MVCA Mainline Decision.
+The repository inherits its research discipline from `hopeless-t/topological-spin-lab`.
 
-## North-star
+```text
+Question
+  ↓
+Experiment / Benchmark Spec
+  ↓
+Surface Policy / Registry Model
+  ↓
+Calculation
+  ↓
+Observable
+  ↓
+Acceptance
+  ↓
+Evidence
+```
 
-The North-star is the **Tool Surface Frontier (TSF)**: the Pareto frontier between end-to-end task success and the cost/risk of the tool surface exposed to a Worker.
+A successful program execution is not automatically a successful research result.
 
-A derived summary is **MSTS(epsilon) — Minimum Sufficient Tool Surface**: the smallest expected surface cost that keeps end-to-end performance within epsilon of an oracle-relevant tool surface while respecting coverage and false-invocation constraints.
+`Plan != Result`  
+`Figure != Evidence`  
+`Research Finding != MVCA Mainline Decision`
 
-We do not optimize "fewest tools" in isolation.
+## Why this project exists
 
-~~~text
-Fewer Tools != Better System
-More Tools != More Capability in Practice
-Tool Available != Tool Visible
-Tool Visible != Tool Selected
-Tool Selected != Tool Qualified
-Tool Qualified != Tool Authorized
-~~~
+Agent systems are accumulating more tools, skills, plugins, MCP services, and specialized providers.
 
-See docs/NORTH_STAR.md.
+But:
 
-## Research questions
+```text
+More available capability
+!=
+More capability that should be visible at once
+```
 
-1. At what point does exposing additional tools stop helping and begin to degrade selection?
-2. Should shortlist size be chosen per query rather than fixed globally?
-3. How quickly do near-duplicate and semantically overlapping tools degrade Worker selection?
-4. Which tool fields are sufficient for routing: name, description, schema, examples, full body, qualification metadata?
-5. How should a Worker behave when no available tool is relevant?
-6. What changes when a task genuinely needs multiple tools?
-7. Does the optimum surface change with Worker/model/provider strength?
-8. When does retrieval/reranking cost more than it saves?
-9. Can an MVCA Active Tool Surface Governor expose fewer tools without widening authority or hiding required qualified capability?
+Large tool surfaces consume context, add latency, create distractors, and may increase wrong-tool selection. Too-small surfaces can hide required capability.
 
-## Experimental philosophy
+This project studies the boundary between those failures.
 
-We keep four layers separate:
+The goal is not to build a production MCP router first.
 
-~~~text
+The goal is to build a public computational laboratory where tool-surface claims are reproducible, falsifiable, and transferable.
+
+## Research boundary
+
+This repository does **not** currently claim to:
+
+- prove that fewer tools are always better;
+- define one universal optimal `k`;
+- qualify any Tool for MVCA;
+- grant execution authority;
+- replace Tool/Skill qualification;
+- prove production performance from synthetic tasks;
+- promote an Active Tool Surface policy into MVCA Mainline.
+
+The first stages separate retrieval/surface behavior from Worker behavior.
+
+```text
 Registry Coverage
 != Retrieval Quality
 != Worker Selection Quality
 != End-to-End Task Success
-~~~
+```
 
-Primary baselines:
+## North-star
 
-- ORACLE: expose exactly the gold relevant tool set.
-- FULL: expose the entire registry.
-- RANDOM-k: negative control.
-- FIXED-k: deterministic shortlist depth.
-- ADAPTIVE-k: select shortlist depth from query/retrieval evidence.
+The North-star is the **Tool Surface Frontier (TSF)**:
 
-The first experiments are training-free and provider-neutral. Model training is deferred until simpler retrieval/policy experiments stop answering the research question.
+> the Pareto frontier between end-to-end task success and the cost/risk of the tool surface exposed to a Worker.
 
-## Experiment sequence
+A derived summary is **MSTS(epsilon) — Minimum Sufficient Tool Surface**:
 
-| ID | Experiment | Main question |
-|---|---|---|
-| E00 | Synthetic Registry Calibration | Can controlled registries with known overlap/difficulty be generated reproducibly? |
-| E01 | Fixed-k Surface Sweep | How does success change as visible surface grows? |
-| E02 | Adaptive-k Policies | Can per-query depth beat fixed-k? |
-| E03 | Distractor Stress | Which irrelevant tools are most damaging? |
-| E04 | Representation Ablation | Name vs description vs schema vs body vs qualification metadata |
-| E05 | No-tool / Abstention | Does a smaller surface reduce false tool invocation? |
-| E06 | Multi-tool Surface | What changes for genuine multi-tool tasks? |
-| E07 | Public Benchmark Import | Reproduce selected BFCL / ToolBench / SkillRouter-style workloads |
-| E08 | Worker-in-the-loop | Measure real model selection on identical candidate surfaces |
-| E09 | MVCA Projection | Translate findings into an Active Tool Surface Governor candidate |
+> the smallest surface that remains within a declared tolerance of an oracle-relevant surface while satisfying coverage and false-invocation constraints.
 
-## What we calculate
+We do not optimize minimum tool count alone.
 
-Core measurements:
+```text
+Fewer Tools != Better System
+Tool Available != Tool Visible
+Tool Visible != Tool Selected
+Tool Selected != Tool Qualified
+Tool Qualified != Tool Authorized
+```
 
-- gold tool coverage;
-- candidate count;
-- exposed schema/token volume;
+See [docs/NORTH_STAR.md](docs/NORTH_STAR.md).
+
+## At a glance
+
+```mermaid
+flowchart LR
+    W["Tool Warehouse / Registry"] --> P["Surface Policy"]
+    P --> S["Active Tool Surface"]
+    S --> A["AI Worker"]
+    A --> O["Selection / Abstention / Tool Call"]
+    O --> M["Metrics"]
+    M --> E["Evidence"]
+
+    G["Gold relevance / Task contract"] --> M
+    C["Exposure + Cost"] --> M
+```
+
+The diagram is a navigation aid, not an empirical result.
+
+## Research states
+
+Every implemented benchmark or validation ends in one of four states:
+
+```text
+PASS
+  Execution completed and all contract integrity / acceptance checks passed.
+
+FAIL
+  Execution completed but one or more declared checks failed.
+
+INVALID
+  The spec was invalid and research execution did not begin.
+
+ERROR
+  Software, runtime, or I/O failure prevented valid evaluation.
+```
+
+PASS means the benchmark contract ran correctly. It does **not** mean a preferred hypothesis won.
+
+## Research lanes
+
+```text
+RQ-xxx     open research question
+VAL-xxx    harness / method / dataset validation
+BENCH-xxx  comparative computational benchmark
+REF-xxx    named reference object when needed
+```
+
+### VAL-001 — Synthetic Registry / Harness Validation
+
+Before asking whether small surfaces help, validate deterministic registries, exact gold sets, no-tool cases, chance controls, invalid-spec rejection, and broken-control detection.
+
+See [docs/VAL-001.md](docs/VAL-001.md) and [specs/VAL-001.json](specs/VAL-001.json).
+
+### BENCH-001 — Fixed-k Surface Sweep
+
+Compare `ORACLE`, `FULL`, `RANDOM-k`, and a simple deterministic lexical retrieval surface across controlled registry size and overlap.
+
+This is initially a **retrieval/surface benchmark**. It may not claim end-to-end Worker degradation.
+
+See [docs/BENCH-001.md](docs/BENCH-001.md) and [specs/BENCH-001.json](specs/BENCH-001.json).
+
+## Planned sequence
+
+```mermaid
+flowchart LR
+    V1["VAL-001<br/>Synthetic registry + harness"] -->
+    B1["BENCH-001<br/>Fixed-k surface sweep"] -->
+    B2["BENCH-002<br/>Adaptive-k"] -->
+    B3["BENCH-003<br/>Distractor stress"] -->
+    B4["BENCH-004<br/>Representation ablation"] -->
+    B5["BENCH-005<br/>No-tool abstention"] -->
+    B6["BENCH-006<br/>Multi-tool surfaces"] -->
+    V2["VAL-002<br/>Public benchmark adapters"] -->
+    B7["BENCH-007<br/>Worker-in-the-loop"] -->
+    M["MVCA transfer candidate"]
+```
+
+Roadmap nodes describe intent, not implemented results.
+
+## What we measure
+
+The lab will not report only Top-1 accuracy.
+
+Core observables include:
+
+- gold-tool coverage;
+- visible tool count;
+- serialized bytes / tokens;
 - retrieval latency;
-- Worker selection accuracy conditional on gold presence;
-- wrong-tool invocation rate;
-- no-tool false invocation rate;
+- selection accuracy conditional on gold presence;
+- wrong-tool invocation;
+- false invocation on no-tool tasks;
 - end-to-end task success;
 - tool-call count;
 - reasoning turns;
-- provider/runtime cost.
+- provider/runtime cost where observable.
 
-Analysis methods:
+Analysis may include:
 
+- paired comparisons;
 - bootstrap confidence intervals;
-- paired comparisons on identical tasks;
 - surface-size response curves;
-- change-point/degradation-threshold analysis;
+- change-point candidate detection;
 - factorial sensitivity analysis;
 - Monte Carlo workload mixtures;
 - Pareto-frontier construction;
-- power analysis before expensive model-in-the-loop runs.
+- power analysis before expensive Worker runs.
 
-## Public-repository research contract
+## Repository structure
 
-Every durable claim should be independently inspectable:
+The shape intentionally mirrors `topological-spin-lab`.
 
-~~~text
-Claim
- -> exact code commit
- -> exact dataset/registry digest
- -> exact configuration
- -> exact seeds
- -> raw result
- -> analysis
- -> limitations
-~~~
-
-Failed replications, negative results, adversarial registries, alternative routing policies and counterexamples are first-class results.
-
-Canonical claims must be reproducible without private Catfood/MVCA data. Proprietary-provider experiments may be supplemental evidence but cannot be the sole support for a canonical claim.
-
-## Planned repository layout
-
-~~~text
-.
-├── README.md
-├── RESEARCH_CHARTER.md
-├── docs/
-│   ├── NORTH_STAR.md
-│   ├── RESEARCH_QUESTIONS.md
-│   ├── METRICS.md
-│   ├── EXPERIMENT_ROADMAP.md
-│   └── THREATS_TO_VALIDITY.md
-├── references/
-├── claims/
-├── schemas/
-├── benchmarks/
-├── experiments/
-│   ├── E00_synthetic_registry/
-│   ├── E01_fixed_k_surface/
-│   ├── E02_adaptive_k/
-│   ├── E03_distractor_stress/
-│   ├── E04_representation_ablation/
-│   └── E05_no_tool_abstention/
-├── src/finite_tool_surface_lab/
+```text
+finite-tool-surface-lab/
+│
+├── specs/
+│   ├── VAL-001.json
+│   └── BENCH-001.json
+│
+├── src/
+│   └── finite_tool_surface_lab/
+│       ├── spec.py
+│       └── results.py
+│
 ├── tests/
-└── results/
-~~~
+│
+├── evidence/
+│
+├── research/
+│
+├── docs/
+│
+└── .github/
+    └── workflows/
+```
 
-Large benchmark data should not be committed blindly to Git. Prefer deterministic generators, small fixtures, content-addressed manifests, and external dataset releases when appropriate.
+No empty-directory architecture theatre: components are added only when a real research contract needs them.
 
-## Reference work
+## Reproducibility model
 
-- Toollery — candidate compression for large skill/tool libraries: https://arxiv.org/abs/2609.22218
-- How Many Tools Should an LLM Agent See? A Chance-Corrected Answer: https://arxiv.org/abs/2605.24660
-- SkillRouter — retrieve-and-rerank at about 80K skills: https://arxiv.org/abs/2603.22455 and https://github.com/zhengyanzhao1997/SkillRouter
-- BFCL — executable function/tool-calling evaluation: https://gorilla.cs.berkeley.edu/leaderboard
-- ToolBench: https://github.com/OpenBMB/ToolBench
-- StableToolBench: https://github.com/THUNLP-MT/StableToolBench
-- RAG-MCP: https://arxiv.org/abs/2505.03275
-- Scalable LLM Agent Tool Access in the Cloud: https://arxiv.org/abs/2607.15593
+```text
+Question
+  ↓
+Frozen Spec
+  ↓
+Execution
+  ↓
+Structured Observation
+  ↓
+Acceptance
+  ↓
+Evidence
+```
+
+Canonical evidence should identify exact source commit, spec/hash, fixture or dataset digest, seeds, runtime/platform, raw structured observations, aggregate metrics, limitations, and claim ceiling.
+
+Large datasets should be referenced by pinned release/hash and reproducible download/transformation scripts rather than copied blindly into Git.
+
+## Public-repository advantage
+
+Public work is part of the method.
+
+Outside researchers should be able to:
+
+- rerun the same spec;
+- submit another surface policy;
+- contribute adversarial distractor registries;
+- reproduce on another model/provider;
+- report a failed replication;
+- falsify a headline claim;
+- compare against the same task-level evidence.
+
+Negative results are first-class results.
+
+A canonical public claim cannot rely solely on private Catfood/MVCA data or a private provider.
+
+## Development philosophy
+
+Inherited from `topological-spin-lab`:
+
+```text
+functional core
++
+thin imperative shell
+```
+
+The deterministic research core should not depend on network, Git, wall clock, UI, or private services.
+
+Provider/model calls, when later introduced, live outside that core and must be recorded as experimental conditions.
+
+The harness is incomplete if it can demonstrate PASS but cannot detect broken policies, invalid specs, or corrupted ground truth.
+
+## Prior art
+
+The initial map includes Toollery, shortlist-depth/BoR research, SkillRouter, BFCL, ToolBench / StableToolBench, RAG-MCP, and scalable MCP gateway work.
+
+See [docs/REFERENCES.md](docs/REFERENCES.md) and [docs/LITERATURE_MAP.md](docs/LITERATURE_MAP.md).
 
 ## Relationship to MVCA
 
-The intended transfer target is an eventual research candidate such as:
+Possible future transfer target:
 
-~~~text
+```text
 Qualified Tool Warehouse
-        |
-        v
+        ↓
 Active Tool Surface Governor
-        |
-        | bounded, evidence-selected projection
-        v
-Task / Worker
-~~~
+        ↓
+bounded evidence-selected projection
+        ↓
+Worker
+```
 
-The central MVCA-facing invariant is:
+But:
 
-~~~text
+```text
 Capability Warehouse Size != Active Tool Surface Size
 Tool Surface Optimization != Authority Optimization
-~~~
+Retrieval Confidence != Execution Authority
+```
 
-A smaller visible surface must never silently widen authority, hide mandatory gates, or convert retrieval confidence into execution permission.
+A smaller visible surface must never silently widen authority, hide mandatory gates, or turn retrieval confidence into permission.
 
-## Current phase
+## License
 
-**Phase 0 — research constitution and benchmark design.**
+MIT. See [LICENSE](LICENSE).
 
-No headline empirical claim is frozen yet.
+## Project principle
 
-The first implementation target is **E00: a deterministic synthetic registry generator** with controlled semantic overlap and reproducible ground truth.
+> **Expose enough capability to solve the task, but require evidence before claiming how much is enough.**

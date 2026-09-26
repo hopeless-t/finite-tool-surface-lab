@@ -1,0 +1,64 @@
+name: BENCH-003 Post Analysis
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/bench-003-post-analysis.yml"
+      - "src/finite_tool_surface_lab/bench003_post_analysis.py"
+      - "research/COUNCIL-019_BENCH003_RESULTS.md"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install analysis dependency
+        run: python -m pip install numpy
+
+      - name: Download frozen BENCH-003 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p input
+          gh run download 36242144911 \
+            --repo hopeless-t/finite-tool-surface-lab \
+            --name BENCH-003-36242144911 \
+            --dir input
+
+      - name: Verify source summary
+        run: |
+          python - <<'PY'
+          import json
+          s=json.load(open("input/summary.json"))
+          assert s["state"] == "PASS"
+          assert s["observation_count"] == 483840
+          assert s["observation_sha256"] == "019d4ec58cce84fd2e3c0b92e47fa0ec04bf312aa6bb8e1e421b812bf83db22c"
+          print("SOURCE_BINDING_PASS")
+          PY
+
+      - name: Run post analysis and workload Monte Carlo
+        run: |
+          python src/finite_tool_surface_lab/bench003_post_analysis.py \
+            --aggregates input/aggregates.jsonl \
+            --summary input/summary.json \
+            --out evidence/BENCH-003/post-analysis.json
+          python -m json.tool evidence/BENCH-003/post-analysis.json >/dev/null
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BENCH-003-post-analysis-${{ github.run_id }}
+          path: evidence/BENCH-003/post-analysis.json
+          if-no-files-found: error
+          retention-days: 90

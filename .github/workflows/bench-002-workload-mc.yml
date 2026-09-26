@@ -1,0 +1,78 @@
+name: BENCH-002 Workload Mix Monte Carlo
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/bench-002-workload-mc.yml"
+      - "src/finite_tool_surface_lab/bench002_workload_mc.py"
+      - "research/COUNCIL-013_BENCH002_WORKLOAD_MC.md"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: bench-002-workload-mc-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  analyze:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download optimized BENCH-002 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: BENCH-002-36233741224
+          path: input
+          github-token: ${{ github.token }}
+          run-id: 36233741224
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install analysis tool
+        run: python -m pip install numpy
+
+      - name: Run workload-mixture Monte Carlo
+        run: |
+          python -m finite_tool_surface_lab.bench002_workload_mc \
+            --aggregates input/aggregates.jsonl \
+            --out evidence/BENCH-002/workload-mc.json \
+            --mixtures-per-alpha 20000 \
+            --seed 2026092609
+
+      - name: Summary
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          r=json.load(open("evidence/BENCH-002/workload-mc.json"))
+          print("# BENCH-002 workload-mix Monte Carlo")
+          print()
+          print(f"Mixtures: **{r['total_workload_mixtures']:,}**")
+          print(
+              "Constrained selections: "
+              f"**{r['total_constrained_policy_selections']:,}**"
+          )
+          print()
+          for cell in r["results"]:
+              top=cell["selections"][0]
+              print(
+                  f"- alpha={cell['dirichlet_alpha']}, "
+                  f"epsilon={cell['epsilon']:.2f}: "
+                  f"**{top['policy_id']}** "
+                  f"({top['frequency']:.3%})"
+              )
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BENCH-002-WORKLOAD-MC-${{ github.run_id }}
+          path: evidence/BENCH-002/workload-mc.json
+          if-no-files-found: error
+          retention-days: 90

@@ -1,0 +1,69 @@
+name: BENCH-002 Adaptive-k Surface Policies
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/bench-002.yml"
+      - "src/finite_tool_surface_lab/adaptive.py"
+      - "src/finite_tool_surface_lab/bench002.py"
+      - "src/finite_tool_surface_lab/retrieval.py"
+      - "src/finite_tool_surface_lab/synthetic.py"
+      - "specs/BENCH-002.json"
+      - "docs/BENCH-002.md"
+      - "research/COUNCIL-011_BENCH002_DESIGN.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bench-002-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Run full benchmark
+        run: |
+          python -m finite_tool_surface_lab.bench002 \
+            --spec specs/BENCH-002.json \
+            --out evidence/BENCH-002/run
+
+      - name: Summary
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          s=json.load(open("evidence/BENCH-002/run/summary.json"))
+          print("# BENCH-002")
+          print()
+          print(f"State: **{s['state']}**")
+          print(f"Canonical policy observations: **{s['observation_count']:,}**")
+          print(f"Aggregate rows: **{s['aggregate_rows']:,}**")
+          print(f"Frontier points: **{s['frontier_points']:,}**")
+          print(f"Adaptive frontier points: **{s['adaptive_frontier_points']:,}**")
+          print(
+              "Adaptive no-tool nonempty range: "
+              f"**{s['adaptive_no_tool_nonempty_rate_range']}**"
+          )
+          print()
+          print(s["claim_ceiling"])
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BENCH-002-${{ github.run_id }}
+          path: evidence/BENCH-002/run/
+          if-no-files-found: error
+          retention-days: 90

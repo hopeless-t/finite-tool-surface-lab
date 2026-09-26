@@ -43,3 +43,11 @@ jobs:
             --out runs/BENCH-001-smoke \
             --quick
           python -m json.tool runs/BENCH-001-smoke/summary.json >/dev/null
+
+      - name: BENCH-002 smoke
+        run: |
+          python -m finite_tool_surface_lab.bench002 \
+            --spec specs/BENCH-002.json \
+            --out runs/BENCH-002-smoke \
+            --quick
+          python -m json.tool runs/BENCH-002-smoke/summary.json >/dev/null

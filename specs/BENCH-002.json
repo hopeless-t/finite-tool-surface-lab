@@ -1,0 +1,36 @@
+{
+  "schema_version": "ftsl-experiment-v0.1",
+  "id": "BENCH-002",
+  "lane": "BENCH",
+  "status": "FROZEN",
+  "question": "Can transparent query-specific depth policies improve the retrieval/surface frontier over fixed-k when all policies use the same deterministic ranking?",
+  "seed": 20260927,
+  "parameters": {
+    "evaluation_seeds": [20260927, 20260928, 20260929],
+    "registry_sizes": [32, 128, 512, 2048],
+    "task_types": ["single_tool", "multi_tool", "no_tool"],
+    "overlap_levels": [0.0, 0.25, 0.5, 0.75],
+    "alias_rates": [0.0, 0.05, 0.15],
+    "repeats_per_cell": 32,
+    "fixed_k_values": [0, 1, 2, 3, 5, 8, 13, 20, 32, 50],
+    "relative_top_thresholds": [0.25, 0.5, 0.75, 0.9],
+    "cumulative_mass_thresholds": [0.5, 0.7, 0.8, 0.9, 0.95],
+    "adaptive_policies": [
+      "POSITIVE_SUPPORT",
+      "RELATIVE_TOP",
+      "CUMULATIVE_SCORE_MASS",
+      "LARGEST_SCORE_DROP"
+    ],
+    "msts_epsilons": [0.0, 0.01, 0.02, 0.05, 0.1]
+  },
+  "acceptance": {
+    "observation_digest_present": true,
+    "selected_k_within_registry": true,
+    "adaptive_zero_evidence_abstains": true,
+    "tie_blocks_not_split": true,
+    "all_policy_families_present": true,
+    "aggregate_task_counts_match": true,
+    "frontier_recomputable": true
+  },
+  "claim_ceiling": "Synthetic adaptive retrieval/surface benchmark only; no end-to-end Worker performance claim."
+}

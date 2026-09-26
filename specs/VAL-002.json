@@ -1,0 +1,25 @@
+{
+  "schema_version": "ftsl-experiment-v0.1",
+  "id": "VAL-002",
+  "lane": "VAL",
+  "status": "FROZEN",
+  "question": "Can pinned pmndrs/math package metadata and runtime exports be converted deterministically into an external Tool catalogue with explicit alias-equivalence and cross-type homonym structure?",
+  "seed": 20260926,
+  "parameters": {
+    "package_name": "math",
+    "package_version": "0.1.0",
+    "npm_integrity": "sha512-hq5KkLblFiR8OO8ZYqPK02mBqrXuxJ6hwvhL3ZM9OFkAR82/20n4H768SWl4yVVrufh8VijEm42D4V9N8hDa2g==",
+    "namespaces": ["vec2", "vec3", "vec4", "euler", "quat", "quat2", "mat2", "mat2d", "mat3", "mat4"],
+    "sample_pairs_per_class": 64
+  },
+  "acceptance": {
+    "package_identity_exact": true,
+    "api_docs_present": true,
+    "catalog_nonempty": true,
+    "alias_equivalence_present": true,
+    "cross_type_homonyms_present": true,
+    "seeded_sampling_present": true,
+    "node20_node22_byte_identical": true
+  },
+  "claim_ceiling": "External catalogue adapter validation only; no retrieval, Worker, Tool qualification, or MVCA policy claim."
+}

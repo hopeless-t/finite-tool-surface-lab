@@ -1,0 +1,119 @@
+name: VAL-002 pmndrs math catalogue
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/val-002-pmndrs-math.yml"
+      - "external/pmndrs-math/**"
+      - "specs/VAL-002.json"
+      - "docs/VAL-002.md"
+      - "research/COUNCIL-016_VAL002_EXTERNAL_CORPUS.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: val-002-pmndrs-math-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  extract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["20", "22"]
+
+    defaults:
+      run:
+        working-directory: external/pmndrs-math
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install pinned package
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Build deterministic catalogue
+        run: |
+          node build_catalog.mjs \
+            --out "out/catalog.json" \
+            --seed 20260926 \
+            --sample-pairs 64
+          sha256sum out/catalog.json > out/catalog.sha256
+          cat out/catalog.sha256
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: val002-pmndrs-math-node-${{ matrix.node }}
+          path: |
+            external/pmndrs-math/out/
+            external/pmndrs-math/package-lock.json
+          if-no-files-found: error
+          retention-days: 90
+
+  compare:
+    needs: extract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: val002-pmndrs-math-node-*
+          path: replay
+
+      - name: Compare Node 20 / 22 catalogue
+        run: |
+          set -euo pipefail
+          diff -u \
+            replay/val002-pmndrs-math-node-20/catalog.json \
+            replay/val002-pmndrs-math-node-22/catalog.json
+
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          p=Path("replay/val002-pmndrs-math-node-20/catalog.json")
+          data=json.loads(p.read_text())
+          expected_integrity="sha512-hq5KkLblFiR8OO8ZYqPK02mBqrXuxJ6hwvhL3ZM9OFkAR82/20n4H768SWl4yVVrufh8VijEm42D4V9N8hDa2g=="
+
+          assert data["source"]["package"] == "math"
+          assert data["source"]["version"] == "0.1.0"
+          assert data["source"]["npm_integrity"] == expected_integrity
+          assert data["tool_count"] > 0
+          assert data["alias_equivalence_group_count"] > 0
+          assert data["cross_type_homonym_group_count"] > 0
+          assert data["deterministic_samples"]["alias_pairs"]
+          assert data["deterministic_samples"]["homonym_pairs"]
+
+          digest=hashlib.sha256(p.read_bytes()).hexdigest()
+          result={
+              "study_id":"VAL-002",
+              "state":"PASS",
+              "comparison":"BYTE_IDENTICAL_NODE20_NODE22",
+              "catalog_sha256":digest,
+              "tool_count":data["tool_count"],
+              "alias_equivalence_group_count":data["alias_equivalence_group_count"],
+              "cross_type_homonym_group_count":data["cross_type_homonym_group_count"],
+              "sampled_alias_pairs":len(data["deterministic_samples"]["alias_pairs"]),
+              "sampled_homonym_pairs":len(data["deterministic_samples"]["homonym_pairs"]),
+          }
+          Path("replay/val002-result.json").write_text(
+              json.dumps(result,indent=2,sort_keys=True)+"\n"
+          )
+          print(json.dumps(result,sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VAL-002-REFERENCE-${{ github.run_id }}
+          path: replay/val002-result.json
+          if-no-files-found: error
+          retention-days: 90

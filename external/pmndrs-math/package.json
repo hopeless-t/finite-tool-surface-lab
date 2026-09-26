@@ -1,0 +1,8 @@
+{
+  "name": "ftsl-val002-pmndrs-math",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "math": "0.1.0"
+  }
+}

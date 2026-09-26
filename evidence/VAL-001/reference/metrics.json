@@ -1,0 +1,26 @@
+{
+  "cells": 60,
+  "checks": {
+    "deterministic_fixture_replay": true,
+    "full_exact_registry": true,
+    "intentional_failure_injection_detected": true,
+    "invalid_specs_rejected": true,
+    "no_tool_gold_empty": true,
+    "oracle_exact_gold": true,
+    "random_k_theory_abs_error_max": true,
+    "registry_gold_integrity": true
+  },
+  "failure_injection": {
+    "broken_full": true,
+    "broken_oracle": true,
+    "corrupted_gold": true,
+    "invalid_spec": true
+  },
+  "max_random_theory_abs_error": 0.003799999999999998,
+  "mode": "FULL",
+  "random_tolerance": 0.02,
+  "seed": 20260926,
+  "state": "PASS",
+  "study_id": "VAL-001",
+  "tasks": 5760
+}

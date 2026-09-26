@@ -1,0 +1,35 @@
+{
+  "schema_version": "ftsl-reference-verification-v0.1",
+  "study_id": "VAL-001",
+  "candidate": {
+    "source_commit": "89e99a82f0f950e139d5156942c584ce9f499fc3",
+    "workflow_run_id": 36221794870,
+    "artifact_id": 10898733297,
+    "artifact_digest": "sha256:38b15ea425e51d4af336d69ae96aa99f31e6c74f80656fabf4564893a01a1a7b",
+    "spec_sha256": "cfa9775e96963d83e6271d9a624111a3c430abdef25106dd9b34a9d646e72d9a"
+  },
+  "stable_output_sha256": {
+    "cell_digests.jsonl": "bef0faca5fdda2c4c76224e6c2e788b9621ecde0d2bb96ef16bd469e20ab5ad3",
+    "metrics.json": "1b32ff328852524bc8120ccfef99caba56f6f865c9ba734ddcb47b2d2dba23cb",
+    "random_calibration.jsonl": "80ae3aaf2a2462e4c698e66472dd8fd9a0753428baee234d3e9d55720eff2874"
+  },
+  "candidate_manifest_sha256": "339787f58e7f384fd48af02dec209d56ddc519a5371e19cf8718c66076cbce77",
+  "independent_replay": {
+    "source_commit": "9e6b59244ece22ee20b79ed4a25d74955dc2a234",
+    "workflow_run_id": 36222102366,
+    "python_3_12": {
+      "artifact_id": 10899610990,
+      "artifact_digest": "sha256:0ff1ac3893e8a464e2d70dda8e4849a3571f0e5aa8db0488292d518502bccf33",
+      "python": "3.12.14"
+    },
+    "python_3_13": {
+      "artifact_id": 10899292948,
+      "artifact_digest": "sha256:ef64cba43dfec959df849e6a5aa0f88f922468319992bf249c5a45d9d63be628",
+      "python": "3.13.15"
+    },
+    "compare_job_id": 108349191466,
+    "compare_job_conclusion": "success",
+    "comparison": "BYTE_IDENTICAL_STABLE_OUTPUTS"
+  },
+  "promotion_gate": "PASS"
+}

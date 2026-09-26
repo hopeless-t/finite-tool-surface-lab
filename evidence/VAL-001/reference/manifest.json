@@ -1,0 +1,10 @@
+{
+  "mode": "FULL",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "python": "3.12.14",
+  "schema_version": "ftsl-evidence-manifest-v0.1",
+  "seed": 20260926,
+  "source_commit": "89e99a82f0f950e139d5156942c584ce9f499fc3",
+  "spec_sha256": "cfa9775e96963d83e6271d9a624111a3c430abdef25106dd9b34a9d646e72d9a",
+  "study_id": "VAL-001"
+}

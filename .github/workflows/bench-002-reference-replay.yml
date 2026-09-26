@@ -1,0 +1,127 @@
+name: BENCH-002 Reference Replay
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/bench-002-reference-replay.yml"
+      - "research/COUNCIL-014_BENCH002_INTERPRETATION.md"
+      - "src/finite_tool_surface_lab/adaptive.py"
+      - "src/finite_tool_surface_lab/bench002.py"
+      - "src/finite_tool_surface_lab/retrieval.py"
+      - "src/finite_tool_surface_lab/synthetic.py"
+      - "specs/BENCH-002.json"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bench-002-reference-replay-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  replay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Full deterministic replay
+        run: |
+          python -m finite_tool_surface_lab.bench002 \
+            --spec specs/BENCH-002.json \
+            --out "evidence/BENCH-002/replay-${{ matrix.python }}"
+
+      - name: Stable research-output digests
+        run: |
+          cd "evidence/BENCH-002/replay-${{ matrix.python }}"
+          sha256sum \
+            aggregates.jsonl \
+            frontier.json \
+            msts.json \
+            observation_digest.json \
+            summary.json \
+            | sort -k2 > stable-digests.sha256
+          cat stable-digests.sha256
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bench002-replay-${{ matrix.python }}
+          path: evidence/BENCH-002/replay-${{ matrix.python }}/
+          if-no-files-found: error
+          retention-days: 90
+
+  compare:
+    needs: replay
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: bench002-replay-*
+          path: replay
+
+      - name: Compare stable outputs
+        run: |
+          set -euo pipefail
+          diff -u \
+            replay/bench002-replay-3.12/stable-digests.sha256 \
+            replay/bench002-replay-3.13/stable-digests.sha256
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          roots = {
+              "3.12": Path("replay/bench002-replay-3.12"),
+              "3.13": Path("replay/bench002-replay-3.13"),
+          }
+          summaries = {
+              version: json.loads((root / "summary.json").read_text())
+              for version, root in roots.items()
+          }
+          digests = {
+              version: json.loads(
+                  (root / "observation_digest.json").read_text()
+              )
+              for version, root in roots.items()
+          }
+          assert summaries["3.12"] == summaries["3.13"]
+          assert digests["3.12"] == digests["3.13"]
+          assert summaries["3.12"]["state"] == "PASS"
+
+          result = {
+              "study_id": "BENCH-002-REFERENCE-REPLAY",
+              "state": "PASS",
+              "comparison": "BYTE_IDENTICAL_STABLE_OUTPUTS",
+              "python_versions": ["3.12", "3.13"],
+              "observation_count": summaries["3.12"]["observation_count"],
+              "observation_sha256": summaries["3.12"]["observation_sha256"],
+              "aggregate_rows": summaries["3.12"]["aggregate_rows"],
+              "frontier_points": summaries["3.12"]["frontier_points"],
+          }
+          Path("replay/reference-replay.json").write_text(
+              json.dumps(result, indent=2, sort_keys=True) + "\n"
+          )
+          print(json.dumps(result, sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BENCH-002-REFERENCE-REPLAY-${{ github.run_id }}
+          path: replay/reference-replay.json
+          if-no-files-found: error
+          retention-days: 90

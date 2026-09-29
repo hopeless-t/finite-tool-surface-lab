@@ -20,6 +20,8 @@
    https://aws.amazon.com/blogs/machine-learning/build-a-multi-account-ai-agent-with-agentcore-gateway-and-mcp/
 7. Openship — MCP security and permission model  
    https://openship.io/docs/mcp
+8. Claude / claude.dev — *Automating eval design and hillclimbing with Claude*  
+   https://claude.dev/blog/automating-eval-design-and-hillclimbing/
 
 ## Source -> Observation -> Inference -> Experiment impact
 
@@ -154,6 +156,33 @@ Visible != Authorized-at-call-time
 
 A finite surface can reduce cognitive/token load without becoming an authority grant.
 
+### Eval discipline for dynamic surfaces
+
+**SOURCE OBSERVATION**
+
+Claude's hillclimbing guidance changes one thing at a time, evaluates on both train and held-out test sets, reverts regressions, and treats train-only improvement as possible overfitting. Gains inside the evaluation noise should not be treated as merge-worthy improvement.
+
+**INFERENCE**
+
+A smaller tool surface is not automatically better. Surface optimization needs a quality frontier:
+
+```text
+fewer resident schemas
+!=
+better agent
+```
+
+**EXPERIMENT IMPACT**
+
+Every dynamic-surface benchmark should report at least:
+
+- task success;
+- gold-tool recall;
+- wrong-tool rate;
+- end-to-end tokens;
+- latency;
+- held-out regression against the eager/full baseline.
+
 ## New atomic vocabulary
 
 ### Registry
@@ -233,6 +262,53 @@ Compare raw human-oriented output, JSON, and source-filtered JSON.
 
 Measure token cost and downstream answer fidelity separately.
 
+### BENCH-DYN-004 — lifecycle under mutation
+
+Model a tool as a stateful object rather than a prompt constant:
+
+```text
+REGISTERED
+-> SEARCHABLE
+-> RESIDENT
+-> SELECTED
+-> CALLABLE
+-> STALE
+-> INVALIDATED
+-> REDISCOVERED
+```
+
+Inject catalog changes while tasks are in flight.
+
+Measure:
+
+- stale-call attempts;
+- stale-schema tokens;
+- rediscovery latency;
+- cache hit/miss rate;
+- task success after invalidation;
+- whether authority checks remain independent of visibility/cache state.
+
+### BENCH-DYN-005 — capability universe scale
+
+Hold task set fixed and scale registry size while keeping the number of task-relevant tools constant.
+
+Compare:
+
+- eager full-schema exposure;
+- deferred loading;
+- search-index discovery;
+- namespace/server-level discovery.
+
+This directly tests the Cloudflare/OpenAI pattern:
+
+```text
+large addressable universe
++
+small resident surface
+```
+
+without assuming that prompt-token reduction guarantees total-task savings.
+
 ## Research invariants
 
 ```text
@@ -255,6 +331,16 @@ Prompt Reduction != End-to-End Token Reduction
 These primary sources establish that large real tool catalogs are already being searched, deferred, cached, filtered, and gateway-governed in production-facing systems.
 
 They do not establish one universally optimal shortlist depth, cache TTL, or token-saving percentage.
+
+## Cross-repository dispatch
+
+This intake should be consumed by other Catfood Lab repositories under strict boundary separation:
+
+- **finite-ram-lab:** only the finite-working-set analogy and token/residency accounting;
+- **mvca:** authority separation, gateway policy, call-time revalidation, and transport/tool discovery boundaries;
+- **catfood-jev-cua-lab:** selection/reduction patterns and guarded lowering, not execution authority.
+
+No repository should treat a tool-surface shortlist as a grant.
 
 ## Intake decision
 

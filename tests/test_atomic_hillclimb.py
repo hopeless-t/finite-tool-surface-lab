@@ -1,7 +1,7 @@
 from __future__ import annotations
 import unittest
 
-from finite_tool_surface_lab.atomic_hillclimb import EvalPoint, evaluate_atomic_patch
+from finite_tool_surface_lab.atomic_hillclimb import (\n    EvalPoint, evaluate_atomic_patch, evaluate_prompt_candidate_guard\n)
 
 
 class AtomicHillclimbTests(unittest.TestCase):

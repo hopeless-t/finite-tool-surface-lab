@@ -1,0 +1,17 @@
+{
+  "schema_version":"ftsl-experiment-v0.1",
+  "id":"BENCH-006",
+  "lane":"BENCH",
+  "status":"FROZEN_DESIGN",
+  "question":"For exactly the same evidence facts, how much serialized surface changes across JSON, Markdown and HTML before any model-level cognitive effect is measured?",
+  "source_inspiration":"nicobailon/visual-explainer",
+  "representations":["JSON","MARKDOWN","HTML"],
+  "measurements":["serialized_bytes","fact_count","semantic_sha256","semantic_preserved"],
+  "acceptance":{
+    "all_formats_roundtrip_exact_semantics":true,
+    "authority_effect_is_none":true,
+    "representation_byte_cost_is_observable":true
+  },
+  "next_gate":"Only if the deterministic layer passes, run a frozen Worker review task over equivalent representations and measure correctness, omissions, latency and tokens.",
+  "claim_ceiling":"Representation serialization and semantic-preservation evidence only; no claim that one representation improves model reasoning."
+}

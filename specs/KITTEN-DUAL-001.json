@@ -1,0 +1,35 @@
+{
+  "schema_version":"ftsl-experiment-v0.1",
+  "id":"KITTEN-DUAL-001",
+  "status":"FROZEN_TOY_COMPARISON",
+  "source_lineage":[
+    "existing KITten weak-reviewer circuit",
+    "OZAKI2-001 CRT GEMM toy",
+    "redundant residue number systems as an error-control analogy"
+  ],
+  "circuit_a":{
+    "name":"STATISTICAL_VOTE_CIRCUIT",
+    "question_shape":"many workers answer the same semantic question",
+    "combiner":"majority/consensus/disagreement",
+    "strength":"tolerates a minority of independent weak errors",
+    "failure":"correlated error can create a confident wrong consensus",
+    "output":"judgment, not an exact reconstruction"
+  },
+  "circuit_b":{
+    "name":"EXACT_COORDINATE_CIRCUIT",
+    "question_shape":"workers/channels return different coordinates of one latent object",
+    "combiner":"deterministic reconstruction such as CRT",
+    "strength":"exact recovery inside the representation's uniqueness domain",
+    "failure":"one corrupted coordinate can corrupt plain reconstruction",
+    "output":"reconstructed latent value"
+  },
+  "circuit_c":{
+    "name":"REDUNDANT_EXACT_COORDINATE_CIRCUIT",
+    "question_shape":"exact coordinates plus redundant coordinates",
+    "combiner":"deterministic reconstruction + cross-coordinate consistency",
+    "strength":"can detect/correct bounded coordinate errors in a sufficiently redundant code",
+    "failure":"requires a valid algebraic/typed decomposition and enough redundancy"
+  },
+  "catfood_hypothesis":"For semantic review, use vote circuits where no exact decomposition exists. For structured state/evidence with exact orthogonal coordinates, prefer deterministic reconstruction. Hybrid systems can use local vote/review inside each coordinate and deterministic reconstruction across coordinates.",
+  "claim_ceiling":"Toy information-combination study only. Semantic software-review facts do not automatically form a CRT/RRNS code."
+}

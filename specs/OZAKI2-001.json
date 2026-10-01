@@ -1,0 +1,19 @@
+{
+  "schema_version":"ftsl-experiment-v0.1",
+  "id":"OZAKI2-001",
+  "status":"FROZEN_TOY_CORE",
+  "source_repo":"RIKEN-RCCS/GEMMul8",
+  "source_algorithm":"Ozaki Scheme II integer modular GEMM core",
+  "pipeline":[
+    "integer/scaled inputs",
+    "centered residue projection for each pairwise-coprime modulus",
+    "one low-precision GEMM per modulus",
+    "reduce each product modulo its modulus",
+    "Chinese Remainder Theorem reconstruction",
+    "center into (-P/2,P/2]",
+    "undo scaling in the full algorithm"
+  ],
+  "toy_scope":"Integer core only. No claim to reproduce GEMMul8 floating scaling, GPU kernels, performance, or numerical error analysis.",
+  "key_invariant":"If the true integer product lies inside the CRT uniqueness interval, reconstruction is exact.",
+  "operation_count":"s moduli -> s residue GEMMs in this toy; full accurate scaling may require additional work."
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version":"ftsl-experiment-v0.1",
+  "id":"BENCH-007",
+  "status":"FROZEN_DESIGN",
+  "source_repo":"cloudflare/cf",
+  "source_commit_context":"main observed 2026-10-02",
+  "frozen_source_blobs":{
+    "commands_json":{"sha":"98f2b8b888d8de93ca3df349f8fea29828db16f8","bytes":5261155},
+    "schemas_json":{"sha":"ec4c622e0423f855e2d7688ae324e007a42e114e","bytes":2826987}
+  },
+  "borrowed_atoms":[
+    "local intent search over the complete command catalogue",
+    "return at most five compact command+summary results",
+    "move to exact schema only after discovery",
+    "keep agent search queries free of identifiers and locators",
+    "treat process exit status separately from semantic effect"
+  ],
+  "claim_ceiling":"Surface-size and semantic-effect preflight only; no Cloudflare API call and no claim about search recall on the full catalogue."
+}

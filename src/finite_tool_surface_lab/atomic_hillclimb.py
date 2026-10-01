@@ -89,3 +89,55 @@ def evaluate_atomic_patch(
         "heldout_required":True,
         "authority_effect":"NONE",
     }
+
+
+def evaluate_prompt_candidate_guard(
+    *,
+    baseline_text: str,
+    candidate_text: str,
+    safety_check_passed: bool,
+    trace_phrases: tuple[str, ...] = (),
+    max_growth_ratio: float = 0.20,
+) -> dict[str, Any]:
+    """Deterministic pre-eval guard inspired by AgentCore prompt optimization.
+
+    This is not a semantic safety evaluator. It only freezes three cheap gates:
+    bounded prompt growth, an externally supplied safety result, and exact
+    trace-phrase reuse rejection.
+    """
+    if not isinstance(baseline_text, str) or not baseline_text:
+        raise ValueError("baseline_text_invalid")
+    if not isinstance(candidate_text, str) or not candidate_text:
+        raise ValueError("candidate_text_invalid")
+    if type(safety_check_passed) is not bool:
+        raise ValueError("safety_check_passed_invalid")
+    if type(max_growth_ratio) not in (int, float) or not 0.0 <= float(max_growth_ratio) <= 1.0:
+        raise ValueError("max_growth_ratio_invalid")
+    if (
+        not isinstance(trace_phrases, tuple)
+        or any(not isinstance(item, str) or not item for item in trace_phrases)
+    ):
+        raise ValueError("trace_phrases_invalid")
+
+    growth_ratio=(len(candidate_text)-len(baseline_text))/max(1,len(baseline_text))
+    reused=tuple(sorted({phrase for phrase in trace_phrases if phrase in candidate_text}))
+
+    if growth_ratio > float(max_growth_ratio):
+        status,reason="REJECT","prompt_growth_ceiling_exceeded"
+    elif not safety_check_passed:
+        status,reason="REJECT","external_safety_check_failed"
+    elif reused:
+        status,reason="REJECT","trace_phrase_reuse_detected"
+    else:
+        status,reason="PASS","cheap_prompt_guards_passed"
+
+    return {
+        "schema":"ftsl.prompt-candidate-guard/v0.1",
+        "status":status,
+        "reason":reason,
+        "growth_ratio":growth_ratio,
+        "max_growth_ratio":float(max_growth_ratio),
+        "reused_trace_phrases":list(reused),
+        "semantic_safety_claim":False,
+        "authority_effect":"NONE",
+    }

@@ -1,0 +1,14 @@
+{
+  "schema_version":"ftsl-experiment-v0.1",
+  "id":"COMPAT-001",
+  "status":"FROZEN_DESIGN",
+  "source_inspiration":"cloudflare/vinext",
+  "borrowed_atoms":[
+    "compatibility is tracked per feature, not as one boolean",
+    "partial, deferred, needs-equivalent and unsupported remain distinct",
+    "supported claims should carry test evidence",
+    "substitution checks only the features required by the concrete workload",
+    "compatibility does not imply runtime identity"
+  ],
+  "claim_ceiling":"Generic compatibility admission logic only. No claim about Vinext's complete compatibility rate or any production workload."
+}

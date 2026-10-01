@@ -1,0 +1,56 @@
+{
+  "schema_version": "ftsl-experiment-v0.1",
+  "id": "BENCH-005",
+  "lane": "BENCH",
+  "status": "FROZEN_DESIGN",
+  "question": "For a visual-specialist model with weak general tool discrimination, does a capability-shaped visual surface reduce exposure and invalid-action opportunity while preserving all required visual operations?",
+  "subject": {
+    "model_family": "Mitsuba-ComfyUI-27B",
+    "model_repo": "isichan-ai/Mitsuba-ComfyUI-27B-GGUF",
+    "reasoning": "off",
+    "runtime_identity_required": true
+  },
+  "surfaces": [
+    "NO_TOOL_V0",
+    "VISUAL_NARROW_V0",
+    "BROAD_AGENT_MENU_V0"
+  ],
+  "required_visual_tools": [
+    "mitsuba.visual.describe",
+    "mitsuba.visual.compare",
+    "mitsuba.visual.compile_prompt",
+    "mitsuba.visual.check_constraints"
+  ],
+  "distractor_classes": [
+    "shell",
+    "git",
+    "github",
+    "filesystem_write",
+    "arbitrary_http",
+    "code_execution"
+  ],
+  "measurements": [
+    "tool_count",
+    "serialized_surface_bytes",
+    "required_tool_coverage",
+    "side_effecting_tool_exposure",
+    "invalid_tool_selection_rate",
+    "unknown_rate",
+    "task_completion_rate",
+    "latency_ns",
+    "prompt_tokens"
+  ],
+  "controls": {
+    "same_model_runtime_identity": true,
+    "same_task_corpus": true,
+    "same_reasoning_mode": true,
+    "tool_surface_is_only_independent_variable": true
+  },
+  "acceptance": {
+    "narrow_surface_contains_all_required_visual_tools": true,
+    "narrow_surface_contains_no_side_effecting_tools": true,
+    "surface_does_not_grant_execution_authority": true,
+    "provider_quality_claim_requires_live_model_run": true
+  },
+  "claim_ceiling": "Surface-exposure and specialist-routing evidence only until live Mitsuba runs exist; no provider superiority or production-safety claim."
+}

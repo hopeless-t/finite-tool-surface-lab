@@ -1,15 +1,21 @@
 {
-  "schema_version":"ftsl-experiment-v0.1",
-  "id":"HILLCLIMB-001",
-  "status":"FROZEN_DESIGN",
-  "source":"https://claude.dev/blog/automating-eval-design-and-hillclimbing/",
-  "borrowed_atoms":[
+  "schema_version": "ftsl-experiment-v0.1",
+  "id": "HILLCLIMB-001",
+  "status": "FROZEN_DESIGN",
+  "borrowed_atoms": [
     "one change per round",
     "held-out test split",
     "revert train-only gains",
     "do not act on gains within eval noise",
-    "support cost optimization only while quality holds"
+    "support cost optimization only while quality holds",
+    "reject prompt growth beyond a fixed ceiling before promotion",
+    "require an external safety gate for optimized candidates",
+    "reject exact held-out trace phrase reuse to reduce surface overfit"
   ],
-  "scope":"Decision gate for already-produced evaluation results only.",
-  "claim_ceiling":"No claim that this gate finds globally optimal prompts, skills or harnesses."
+  "scope": "Decision gate for already-produced evaluation results only.",
+  "claim_ceiling": "No claim that this gate finds globally optimal prompts, skills or harnesses; lexical trace-reuse checks are not semantic safety evaluation.",
+  "sources": [
+    "https://claude.dev/blog/automating-eval-design-and-hillclimbing/",
+    "https://aws.amazon.com/blogs/machine-learning/optimizing-agent-system-prompts-with-amazon-bedrock-agentcore/"
+  ]
 }

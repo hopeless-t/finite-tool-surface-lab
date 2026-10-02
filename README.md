@@ -156,6 +156,17 @@ This is initially a **retrieval/surface benchmark**. It may not claim end-to-end
 
 See [docs/BENCH-001.md](docs/BENCH-001.md) and [specs/BENCH-001.json](specs/BENCH-001.json).
 
+### Research candidate — Surface as a control input
+
+For later Worker-in-the-loop work, test whether the active surface changes the Worker's observable trajectory even when the gold tool remains available in every condition.
+
+See [research/SURFACE_AS_CONTROL_INPUT.md](research/SURFACE_AS_CONTROL_INPUT.md).
+
+```text
+Gold coverage != surface-induced Worker state
+Tool surface != passive metadata once it enters the Worker context
+```
+
 ## Planned sequence
 
 ```mermaid

@@ -317,6 +317,14 @@ Retrieval Confidence != Execution Authority
 
 A smaller visible surface must never silently widen authority, hide mandatory gates, or turn retrieval confidence into permission.
 
+## Finite RAM working-set transfer
+
+The Finite RAM Lab B461-B500 line provides a directly relevant experimental method for treating the active tool surface as a finite semantic working set without confusing visibility with authority.
+
+See [docs/FINITE-RAM-WORKING-SET-TRANSFER-2026-10-02.md](docs/FINITE-RAM-WORKING-SET-TRANSFER-2026-10-02.md).
+
+The transfer is methodological: hosted RAM thresholds and q values are not imported.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
